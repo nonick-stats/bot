@@ -17,5 +17,5 @@ The HIVE
   "lock": {
     "hive": false
   },
-};
+}
 ```
