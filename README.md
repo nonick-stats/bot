@@ -1,6 +1,10 @@
 # NoNICK.stats
-Minecraftサーバーの統計を表示するBOT  
-__このBOTは対応サーバー、およびMinecraftとは一切関係ありません__
+NoNICK.statsは、Minecraftサーバーの統計を簡単に表示・共有することができるDiscordBOTです。  
+APIを使用して取得した統計データを画像に出力し、コマンド使用者に表示します。
+
+<div align="center">
+  <img src="https://media.discordapp.net/attachments/958791423161954445/1059402992702468156/NULL1017-StatsCard.png?width=1191&height=670" alt="sample">
+</div>
 
 ### 対応サーバー
 The HIVE
