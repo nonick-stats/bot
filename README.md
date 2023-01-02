@@ -13,7 +13,7 @@ The HIVE
 ```json
 {
   "clientId": "ClientID",
-  "guildId": "コマンドを登録するサーバーID (undefinedでグローバルコマンドで登録)",
+  "guildId": "コマンドを登録するサーバーID (nullでグローバルコマンドで登録)",
 
   "adminGuild": "管理コマンドを登録するサーバーID",
   "adminUser": ["adminGuild内で管理コマンドを使用できるユーザーのID"],
