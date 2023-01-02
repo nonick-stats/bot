@@ -57,8 +57,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('勝率', canvas.width * 0.60 - 10, 300);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.played), canvas.width * 0.20 - 10, 400);
-    context.fillText(String(data.victories), canvas.width * 0.40 - 10, 400);
+    context.fillText(String(data.played || 0), canvas.width * 0.20 - 10, 400);
+    context.fillText(String(data.victories || 0), canvas.width * 0.40 - 10, 400);
     context.fillText(`${(toRate(data.victories, data.played)) } %`, canvas.width * 0.60 - 10, 400);
 
     context.fillStyle = colors.yellow;
@@ -68,9 +68,9 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('デス数', canvas.width * 0.60 - 10, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.kills), canvas.width * 0.20 - 10, 600);
-    context.fillText(String(data.final_kills), canvas.width * 0.40 - 10, 600);
-    context.fillText(String(data.deaths), canvas.width * 0.60 - 10, 600);
+    context.fillText(String(data.kills || 0), canvas.width * 0.20 - 10, 600);
+    context.fillText(String(data.final_kills || 0), canvas.width * 0.40 - 10, 600);
+    context.fillText(String(data.deaths || 0), canvas.width * 0.60 - 10, 600);
 
     context.font = Style.statsName;
     context.fillStyle = colors.pink;
@@ -80,7 +80,7 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
 
     context.font = Style.statsValue;
     context.fillStyle = colors.pink;
-    context.fillText(String(data.treasure_destroyed), canvas.width * 0.80 + 10, 400);
+    context.fillText(String(data.treasure_destroyed || 0), canvas.width * 0.80 + 10, 400);
     context.fillStyle = colors.aqua;
     context.fillText(String(toRate(data.kills, data.deaths) / 100), canvas.width * 0.80 + 10, 600);
   }
@@ -93,9 +93,9 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('ミス数', canvas.width * 0.75, 300);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.played), canvas.width * 0.25, 400);
-    context.fillText(String(data.victories), canvas.width * 0.50, 400);
-    context.fillText(String(data.deaths), canvas.width * 0.75, 400);
+    context.fillText(String(data.played || 0), canvas.width * 0.25, 400);
+    context.fillText(String(data.victories || 0), canvas.width * 0.50, 400);
+    context.fillText(String(data.deaths || 0), canvas.width * 0.75, 400);
 
     context.fillStyle = colors.yellow;
     context.font = Style.statsName;
@@ -103,8 +103,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('キル数', canvas.width * 0.75, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.checkpoints), canvas.width * 0.40, 600);
-    context.fillText(String(data.kills), canvas.width * 0.75, 600);
+    context.fillText(String(data.checkpoints || 0), canvas.width * 0.40, 600);
+    context.fillText(String(data.kills || 0), canvas.width * 0.75, 600);
   }
 
   if (gamePrefix == 'hide') {
@@ -115,8 +115,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('勝率', canvas.width * 0.75, 300);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.played), canvas.width * 0.25, 400);
-    context.fillText(String(data.victories), canvas.width * 0.50, 400);
+    context.fillText(String(data.played || 0), canvas.width * 0.25, 400);
+    context.fillText(String(data.victories || 0), canvas.width * 0.50, 400);
     context.fillText(`${(toRate(data.victories, data.played))} %`, canvas.width * 0.75, 400);
 
     context.fillStyle = colors.yellow;
@@ -126,9 +126,9 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('デス数', canvas.width * 0.75, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.hider_kills), canvas.width * 0.25, 600);
-    context.fillText(String(data.seeker_kills), canvas.width * 0.50, 600);
-    context.fillText(String(data.deaths), canvas.width * 0.75, 600);
+    context.fillText(String(data.hider_kills || 0), canvas.width * 0.25, 600);
+    context.fillText(String(data.seeker_kills || 0), canvas.width * 0.50, 600);
+    context.fillText(String(data.deaths || 0), canvas.width * 0.75, 600);
   }
 
   if (gamePrefix == 'sg') {
@@ -139,8 +139,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('勝率', canvas.width * 0.60 - 10, 300);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.played), canvas.width * 0.20 - 10, 400);
-    context.fillText(String(data.victories), canvas.width * 0.40 - 10, 400);
+    context.fillText(String(data.played || 0), canvas.width * 0.20 - 10, 400);
+    context.fillText(String(data.victories || 0), canvas.width * 0.40 - 10, 400);
     context.fillText(`${(toRate(data.victories, data.played))} %`, canvas.width * 0.60 - 10, 400);
 
     context.fillStyle = colors.yellow;
@@ -149,8 +149,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('デスマッチ到達数', canvas.width * 0.50 - 10, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.kills), canvas.width * 0.20 - 10, 600);
-    context.fillText(String(data.deathmatches), canvas.width * 0.50 - 10, 600);
+    context.fillText(String(data.kills || 0), canvas.width * 0.20 - 10, 600);
+    context.fillText(String(data.deathmatches || 0), canvas.width * 0.50 - 10, 600);
 
     context.fillStyle = colors.pink;
     context.font = Style.statsName;
@@ -158,8 +158,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('チェスト開封数', canvas.width * 0.80 + 10, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.cows), canvas.width * 0.80 + 10, 400);
-    context.fillText(String(data.crates), canvas.width * 0.80 + 10, 600);
+    context.fillText(String(data.cows || 0), canvas.width * 0.80 + 10, 400);
+    context.fillText(String(data.crates || 0), canvas.width * 0.80 + 10, 600);
   }
 
   if (gamePrefix == 'murder') {
@@ -170,8 +170,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('勝率', canvas.width * 0.60 - 10, 300);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.played), canvas.width * 0.20 - 10, 400);
-    context.fillText(String(data.victories), canvas.width * 0.40 - 10, 400);
+    context.fillText(String(data.played || 0), canvas.width * 0.20 - 10, 400);
+    context.fillText(String(data.victories || 0), canvas.width * 0.40 - 10, 400);
     context.fillText(`${(toRate(data.victories, data.played)) } %`, canvas.width * 0.60 - 10, 400);
 
     context.fillStyle = colors.yellow;
@@ -183,8 +183,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
 
     context.fillStyle = colors.yellow;
     context.font = Style.statsValue;
-    context.fillText(String(data.murders), canvas.width * 0.20 - 10, 600);
-    context.fillText(String(data.deaths), canvas.width * 0.40 - 10, 600);
+    context.fillText(String(data.murders || 0), canvas.width * 0.20 - 10, 600);
+    context.fillText(String(data.deaths || 0), canvas.width * 0.40 - 10, 600);
     context.fillStyle = colors.aqua;
     context.fillText(String(toRate(data.murders, data.deaths) / 100), canvas.width * 0.60 - 10, 600);
 
@@ -194,8 +194,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('マーダー退治数', canvas.width * 0.80 + 10, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.coins), canvas.width * 0.80 + 10, 400);
-    context.fillText(String(data.murderer_eliminations), canvas.width * 0.80 + 10, 600);
+    context.fillText(String(data.coins || 0), canvas.width * 0.80 + 10, 400);
+    context.fillText(String(data.murderer_eliminations || 0), canvas.width * 0.80 + 10, 600);
   }
 
   if (gamePrefix == 'sky') {
@@ -206,8 +206,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('勝率', canvas.width * 0.60 - 10, 300);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.played), canvas.width * 0.20 - 10, 400);
-    context.fillText(String(data.victories), canvas.width * 0.40 - 10, 400);
+    context.fillText(String(data.played || 0), canvas.width * 0.20 - 10, 400);
+    context.fillText(String(data.victories || 0), canvas.width * 0.40 - 10, 400);
     context.fillText(`${(toRate(data.victories, data.played)) } %`, canvas.width * 0.60 - 10, 400);
 
     context.fillStyle = colors.yellow;
@@ -216,8 +216,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('開けたMysteryChest', canvas.width * 0.50 - 10, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.kills), canvas.width * 0.20 - 10, 600);
-    context.fillText(String(data.mystery_chests_destroyed), canvas.width * 0.50 - 10, 600);
+    context.fillText(String(data.kills || 0), canvas.width * 0.20 - 10, 600);
+    context.fillText(String(data.mystery_chests_destroyed || 0), canvas.width * 0.50 - 10, 600);
 
     context.fillStyle = colors.pink;
     context.font = Style.statsName;
@@ -225,8 +225,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('使った呪文', canvas.width * 0.80 + 10, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.ores_mined), canvas.width * 0.80 + 10, 400);
-    context.fillText(String(data.spells_used), canvas.width * 0.80 + 10, 600);
+    context.fillText(String(data.ores_mined || 0), canvas.width * 0.80 + 10, 400);
+    context.fillText(String(data.spells_used || 0), canvas.width * 0.80 + 10, 600);
   }
 
   if (gamePrefix == 'ctf') {
@@ -237,8 +237,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('勝率', canvas.width * 0.60 - 10, 300);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.played), canvas.width * 0.20 - 10, 400);
-    context.fillText(String(data.victories), canvas.width * 0.40 - 10, 400);
+    context.fillText(String(data.played || 0), canvas.width * 0.20 - 10, 400);
+    context.fillText(String(data.victories || 0), canvas.width * 0.40 - 10, 400);
     context.fillText(`${(toRate(data.victories, data.played)) } %`, canvas.width * 0.60 - 10, 400);
 
     context.fillStyle = colors.yellow;
@@ -248,9 +248,9 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('デス数', canvas.width * 0.60 - 10, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.kills), canvas.width * 0.20 - 10, 600);
-    context.fillText(String(data.assists), canvas.width * 0.40 - 10, 600);
-    context.fillText(String(data.deaths), canvas.width * 0.60 - 10, 600);
+    context.fillText(String(data.kills || 0), canvas.width * 0.20 - 10, 600);
+    context.fillText(String(data.assists || 0), canvas.width * 0.40 - 10, 600);
+    context.fillText(String(data.deaths || 0), canvas.width * 0.60 - 10, 600);
 
     context.fillStyle = colors.pink;
     context.font = Style.statsName;
@@ -258,8 +258,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('旗 奪還数', canvas.width * 0.80 + 10, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.flags_captured), canvas.width * 0.80 + 10, 400);
-    context.fillText(String(data.flags_returned), canvas.width * 0.80 + 10, 600);
+    context.fillText(String(data.flags_captured || 0), canvas.width * 0.80 + 10, 400);
+    context.fillText(String(data.flags_returned || 0), canvas.width * 0.80 + 10, 600);
   }
 
   if (gamePrefix == 'drop') {
@@ -270,8 +270,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('勝率', canvas.width * 0.60 - 10, 300);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.played), canvas.width * 0.20 - 10, 400);
-    context.fillText(String(data.victories), canvas.width * 0.40 - 10, 400);
+    context.fillText(String(data.played || 0), canvas.width * 0.20 - 10, 400);
+    context.fillText(String(data.victories || 0), canvas.width * 0.40 - 10, 400);
     context.fillText(`${(toRate(data.victories, data.played)) } %`, canvas.width * 0.60 - 10, 400);
 
     context.fillStyle = colors.yellow;
@@ -280,8 +280,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('ブロック破壊数', canvas.width * 0.50 - 10, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.deaths), canvas.width * 0.20 - 10, 600);
-    context.fillText(String(data.blocks_destroyed), canvas.width * 0.50 - 10, 600);
+    context.fillText(String(data.deaths || 0), canvas.width * 0.20 - 10, 600);
+    context.fillText(String(data.blocks_destroyed || 0), canvas.width * 0.50 - 10, 600);
 
     context.fillStyle = colors.pink;
     context.font = Style.statsName;
@@ -289,8 +289,8 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
     context.fillText('アイテム使用数', canvas.width * 0.80 + 10, 500);
 
     context.font = Style.statsValue;
-    context.fillText(String(data.powerups_collected), canvas.width * 0.80 + 10, 400);
-    context.fillText(String(data.vaults_used), canvas.width * 0.80 + 10, 600);
+    context.fillText(String(data.powerups_collected || 0), canvas.width * 0.80 + 10, 400);
+    context.fillText(String(data.vaults_used || 0), canvas.width * 0.80 + 10, 600);
   }
 
   if (gamePrefix == 'ground') {
@@ -371,7 +371,7 @@ async function createHiveStatsCard(data, playerName, gamePrefix) {
 
 function toRate(win, played) {
   const rate = Math.round((win / played) * 100);
-  if (isFinite(rate) || !rate) return '0';
+  if (!isFinite(rate)) return '0';
   return rate;
 }
 
