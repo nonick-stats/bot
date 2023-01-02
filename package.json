@@ -1,0 +1,21 @@
+{
+  "name": "nonick.stats",
+  "version": "1.0.0",
+  "description": "Minecraftサーバーの統計を表示するBOT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@akki256/discord-interaction": "^1.0.1",
+    "@discordjs/rest": "^1.5.0",
+    "@napi-rs/canvas": "^0.1.30",
+    "axios": "^1.2.2",
+    "discord.js": "^14.6.0",
+    "dotenv": "^16.0.3"
+  }
+}
