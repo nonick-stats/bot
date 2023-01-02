@@ -2,7 +2,7 @@ const { ApplicationCommandOptionType, ActionRowBuilder, SelectMenuBuilder, Embed
 const axios = require('axios');
 const emojis = require('../../module/emojis');
 const { createHiveStatsCard } = require('../../module/stats');
-const { lock } = require('../../config');
+const { lock } = require('../../config.json');
 
 /** @type {import('@akki256/discord-interaction').ChatInputRegister} */
 const commandInteraction = {
@@ -75,7 +75,7 @@ const commandInteraction = {
 
     if (lock.hive) {
       const embed = new EmbedBuilder()
-        .setDescription('`😖` 現在HIVEのAPIサーバーに問題が発生しています。時間を置いて再試行してください')
+        .setDescription('`😖` 現在メンテナンス中です。時間を置いて再試行してください')
         .setColor(Colors.Yellow);
 
       return interaction.followUp({ embeds: [embed], ephemeral: true });
@@ -131,12 +131,13 @@ const commandInteraction = {
           console.log(err);
         });
     }
+    else {
+      const embed = new EmbedBuilder()
+        .setDescription('この機能は準備中です。今後のアナウンスをお待ち下さい！')
+        .setColor(Colors.Green);
 
-    const embed = new EmbedBuilder()
-      .setDescription('この機能は準備中です。今後のアナウンスをお待ち下さい！')
-      .setColor(Colors.Green);
-
-    interaction.reply({ embeds: [embed], ephemeral: true });
+      interaction.followUp({ embeds: [embed], ephemeral: true });
+    }
   },
 };
 
