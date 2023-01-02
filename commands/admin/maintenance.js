@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { ApplicationCommandOptionType, Colors, EmbedBuilder } = require('discord.js');
+const { ApplicationCommandOptionType, Colors, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 const { adminGuild, adminUser } = require('../../config');
 
 /** @type {import('@akki256/discord-interaction').ChatInputRegister} */
@@ -24,6 +24,7 @@ const commandInteraction = {
         required: true,
       },
     ],
+    defaultMemberPermissions: PermissionFlagsBits.Administrator,
     guildId: adminGuild,
     dmPermission: false,
     type: 'CHAT_INPUT',
