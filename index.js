@@ -1,5 +1,7 @@
+const { Client, GatewayIntentBits, Events, version, ActivityType } = require('discord.js');
 const { DiscordInteractions } = require('@akki256/discord-interaction');
-const { Client, GatewayIntentBits, Events, version, EmbedBuilder, Colors, ActivityType } = require('discord.js');
+const mongoose = require('mongoose');
+
 const { guildId } = require('./config');
 require('dotenv').config();
 
@@ -9,6 +11,10 @@ const client = new Client({
 
 const interactions = new DiscordInteractions(client);
 interactions.loadInteractions('./commands');
+
+mongoose.connect(process.env.MONGODB_URI, {
+  dbName: process.env.MONGODB_DBNAME,
+});
 
 client.on(Events.ClientReady, () => {
   console.log(`[${new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })}][INFO] BOT ready!`);
@@ -32,15 +38,11 @@ client.on(Events.GuildDelete, () => client.user.setActivity({ name: `${client.gu
 client.on(Events.InteractionCreate, interaction => {
   interactions.run(interaction)
     .catch(err => {
-      if (err.code === 0x0000) return;
-      if (err.code === 0x0001) {
-        const embed = new EmbedBuilder()
-          .setDescription('`⌛` コマンドはクールダウン中です。時間を置いて再試行してください。')
-          .setColor(Colors.Green);
-
-        return interaction.reply({ embeds: [embed], ephemeral: true });
+      switch (err.code) {
+        case 0x0000: return;
+        case 0x0001: return interaction.reply({ content: '`⌛` コマンドはクールダウン中です。時間を置いて再試行してください。', ephemeral: true });
+        default: console.log(err);
       }
-      console.log(err);
     });
 });
 

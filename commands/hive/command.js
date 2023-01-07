@@ -1,11 +1,12 @@
 const { ApplicationCommandOptionType, ActionRowBuilder, SelectMenuBuilder, EmbedBuilder, Colors } = require('discord.js');
 const axios = require('axios');
+const mcidSchema = require('../../schemas/mcid');
 const emojis = require('../../module/emojis');
 const { createHiveStatsCard } = require('../../module/stats');
 const { lock } = require('../../config.json');
 
 // eslint-disable-next-line no-useless-escape
-const gamerTagRegExp = new RegExp(/(^[\d\s'])|[!"#$%&()*+\-.,\/:;<=>?@[\\\]^_`{|}~]/);
+const gamerTagRegExp = new RegExp(/(^[\d\s'])|[^a-zA-Z0-9']/);
 
 const API = new Map([
   [ 'month', 'https://api.playhive.com/v0/game/monthly/player' ],
@@ -56,7 +57,6 @@ const commandInteraction = {
             maxLength: 15,
             minLength: 3,
             type: ApplicationCommandOptionType.String,
-            required: true,
           },
         ],
         type: ApplicationCommandOptionType.Subcommand,
@@ -69,26 +69,15 @@ const commandInteraction = {
   exec: async (interaction) => {
     await interaction.deferReply({ ephemeral: true });
 
-    if (lock.hive) {
-      const embed = new EmbedBuilder()
-        .setDescription('`😖` 現在メンテナンス中です。時間を置いて再試行してください')
-        .setColor(Colors.Yellow);
-
-      return interaction.followUp({ embeds: [embed], ephemeral: true });
-    }
+    if (lock.hive) return interaction.followUp({ content: '`😖` 現在メンテナンス中です。時間を置いて再試行してください' });
 
     if (interaction.options.getSubcommand() == 'stats') {
       const game = interaction.options.getString('game');
-      const gamerTag = interaction.options.getString('gamertag');
+      const gamerTag = interaction.options.getString('gamertag') ?? (await mcidSchema.findOne({ userId: interaction.user.id }))?.be;
       const timeFrame = interaction.options.getString('timeframe');
 
-      if (gamerTagRegExp.test(gamerTag)) {
-        const embed = new EmbedBuilder()
-          .setDescription('`❌` ゲーマータグの値が不正です')
-          .setColor(Colors.Red);
-
-        return interaction.followUp({ embeds: [embed], ephemeral: true });
-      }
+      if (!gamerTag) return interaction.followUp({ content: '`❌` ゲーマータグを入力してください。`/mymcid`コマンドを使用して入力を省略することも出来ます。' });
+      if (gamerTagRegExp.test(gamerTag)) return interaction.followUp({ content: '`❌` ゲーマータグの値が不正です' });
 
       const gameSelect = new ActionRowBuilder().setComponents(
         new SelectMenuBuilder()
