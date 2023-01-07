@@ -4,6 +4,14 @@ const emojis = require('../../module/emojis');
 const { createHiveStatsCard } = require('../../module/stats');
 const { lock } = require('../../config.json');
 
+// eslint-disable-next-line no-useless-escape
+const gamerTagRegExp = new RegExp(/(^[\d\s'])|[!"#$%&()*+\-.,\/:;<=>?@[\\\]^_`{|}~]/);
+
+const API = new Map([
+  [ 'month', 'https://api.playhive.com/v0/game/monthly/player' ],
+  [ 'all', 'https://api.playhive.com/v0/game/all' ],
+]);
+
 /** @type {import('@akki256/discord-interaction').ChatInputRegister} */
 const commandInteraction = {
   data: {
@@ -44,30 +52,18 @@ const commandInteraction = {
           },
           {
             name: 'gamertag',
-            description: 'プレイヤー名',
+            description: 'ゲーマータグ',
             maxLength: 15,
+            minLength: 3,
             type: ApplicationCommandOptionType.String,
             required: true,
-          },
-        ],
-        type: ApplicationCommandOptionType.Subcommand,
-      },
-      {
-        name: 'levels',
-        description: '全ゲームのレベルを表示',
-        options: [
-          {
-            name: 'gamertag',
-            description: 'プレイヤー名',
-            maxLength: 15,
-            required: true,
-            type: ApplicationCommandOptionType.String,
           },
         ],
         type: ApplicationCommandOptionType.Subcommand,
       },
     ],
     dmPermission: false,
+    coolTime: 15000,
     type: 'CHAT_INPUT',
   },
   exec: async (interaction) => {
@@ -83,8 +79,16 @@ const commandInteraction = {
 
     if (interaction.options.getSubcommand() == 'stats') {
       const game = interaction.options.getString('game');
+      const gamerTag = interaction.options.getString('gamertag');
       const timeFrame = interaction.options.getString('timeframe');
-      const playerName = interaction.options.getString('gamertag');
+
+      if (gamerTagRegExp.test(gamerTag)) {
+        const embed = new EmbedBuilder()
+          .setDescription('`❌` ゲーマータグの値が不正です')
+          .setColor(Colors.Red);
+
+        return interaction.followUp({ embeds: [embed], ephemeral: true });
+      }
 
       const gameSelect = new ActionRowBuilder().setComponents(
         new SelectMenuBuilder()
@@ -103,50 +107,54 @@ const commandInteraction = {
           ),
       );
 
-      const timeFlameSelect = new ActionRowBuilder().setComponents(
+      const timeFrameSelect = new ActionRowBuilder().setComponents(
         new SelectMenuBuilder()
-          .setCustomId('nonick-stats:stats-timeFlame')
+          .setCustomId('nonick-stats:stats-timeFrame')
           .setOptions(
             { label: '月間', value: 'month', default: timeFrame == 'month' },
             { label: 'すべての期間', value: 'all', default: timeFrame == 'all' },
           ),
       );
 
-      axios.get(getStatsAPIUrl(game, playerName, timeFrame))
+      axios.get(`${API.get(timeFrame)}/${game}/${gamerTag}`, { timeout: 10000 })
         .then(async res => {
-          interaction.followUp({
-            content: `${playerName}の統計を表示します`,
-            files: [await createHiveStatsCard(res.data, playerName, game)],
-            components: [gameSelect, timeFlameSelect],
-          });
-        })
-        .catch(err => {
-          if (err.response?.status === 404) {
+          if (!res.data?.username && !res.data?.UUID) {
             const embed = new EmbedBuilder()
-              .setDescription('`❌` ゲーマータグが存在しないか、選択した期間にプレイヤーが一回もこのゲームを遊んでいません')
+              .setDescription('`❌` 選択した期間にプレイヤーが一回もこのゲームを遊んでいません')
               .setColor(Colors.Red);
 
-            return interaction.followUp({ content: `${playerName}の統計を表示します`, embeds: [embed], components: [gameSelect, timeFlameSelect] });
+            return interaction.followUp({
+              content: `${gamerTag}の統計を表示します`,
+              embeds: [embed],
+              components: [gameSelect, timeFrameSelect],
+            });
           }
-          console.log(err);
-        });
-    }
-    else {
-      const embed = new EmbedBuilder()
-        .setDescription('この機能は準備中です。今後のアナウンスをお待ち下さい！')
-        .setColor(Colors.Green);
+          else {
+            interaction.followUp({
+              content: `${gamerTag}の統計を表示します`,
+              files: [await createHiveStatsCard(res.data, gamerTag, game)],
+              components: [gameSelect, timeFrameSelect],
+            });
+          }
+        })
+      .catch(err => {
+        if (err.response?.status === 404) {
+          const embed = new EmbedBuilder()
+            .setDescription('`❌` ゲーマータグが存在しないか、選択した期間にプレイヤーが一回もこのゲームを遊んでいません')
+            .setColor(Colors.Red);
 
-      interaction.followUp({ embeds: [embed], ephemeral: true });
+          return interaction.followUp({ content: `${gamerTag}の統計を表示します`, embeds: [embed], components: [gameSelect, timeFrameSelect] });
+        }
+        else {
+          const embed = new EmbedBuilder()
+            .setDescription('`❌` 何らかの原因でAPIサーバーに接続できませんでした')
+            .setColor(Colors.Red);
+
+          return interaction.followUp({ embeds: [embed] });
+        }
+      });
     }
   },
 };
-
-function getStatsAPIUrl(game, player, timeFlame) {
-  const time = new Map([
-    [ 'month', `https://api.playhive.com/v0/game/monthly/player/${game}/${player}` ],
-    [ 'all', `https://api.playhive.com/v0/game/all/${game}/${player}` ],
-  ]);
-  return time.get(timeFlame);
-}
 
 module.exports = [ commandInteraction ];

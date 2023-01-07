@@ -23,7 +23,7 @@ client.on(Events.ClientReady, () => {
   });
 
   client.user.setActivity({ name: `${client.guilds.cache.size}サーバー`, type: ActivityType.Competing });
-  interactions.registerCommands(guildId ?? undefined);
+  interactions.registerCommands(guildId);
 });
 
 client.on(Events.GuildCreate, () => client.user.setActivity({ name: `${client.guilds.cache.size}サーバー`, type: ActivityType.Competing }));

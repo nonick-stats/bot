@@ -6,7 +6,7 @@ const { adminGuild, adminUser } = require('../../config');
 const commandInteraction = {
   data: {
     name: 'maintenance',
-    description: '[🔧] 各サーバーのメンテナンスモードを設定',
+    description: '🔧 各サーバーのメンテナンスモードを設定',
     options: [
       {
         name: 'server',

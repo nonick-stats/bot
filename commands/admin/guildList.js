@@ -4,16 +4,14 @@ const { adminGuild, adminUser } = require('../../config.json');
 /** @type {import('@akki256/discord-interaction').ChatInputRegister} */
 const commandInteraction = {
   data: {
-    name: 'reload',
-    description: '🔧 BOTを再起動',
+    name: 'guildlist',
+    description: '🔧 導入されたサーバーの一覧を表示',
     defaultMemberPermissions: PermissionFlagsBits.Administrator,
     guildId: adminGuild,
     dmPermission: false,
     type: 'CHAT_INPUT',
   },
   exec: async (interaction) => {
-    // PM2環境化でのみ動作
-
     if (!adminUser.includes(interaction.user.id)) {
       const embed = new EmbedBuilder()
         .setDescription('`❌` 権限がありません')
@@ -22,12 +20,17 @@ const commandInteraction = {
       interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
+    await interaction.deferReply({ ephemeral: true });
+
+    const guilds = await Promise.all(interaction.client.guilds.cache
+      .map(async guild => `**${guild.name}** | ${(await interaction.client.users.fetch(guild.ownerId)).tag} \`${guild.ownerId}\``));
+
     const embed = new EmbedBuilder()
-      .setDescription('`🔧` 再起動します...')
+      .setTitle('サーバーリスト')
+      .setDescription(guilds.join('\n'))
       .setColor(Colors.Green);
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
-    process.exit();
+    interaction.followUp({ embeds: [embed] });
   },
 };
 
