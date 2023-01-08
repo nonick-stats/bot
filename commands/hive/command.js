@@ -6,7 +6,7 @@ const { createHiveStatsCard } = require('../../module/stats');
 const { lock } = require('../../config.json');
 
 // eslint-disable-next-line no-useless-escape
-const gamerTagRegExp = new RegExp(/(^[\d\s'])|[^a-zA-Z0-9']/);
+const gamerTagRegExp = new RegExp(/(^[\d\s'])|[^a-zA-Z0-9\s']/);
 
 const API = new Map([
   [ 'month', 'https://api.playhive.com/v0/game/monthly/player' ],
@@ -54,7 +54,7 @@ const commandInteraction = {
           {
             name: 'gamertag',
             description: 'ゲーマータグ',
-            maxLength: 15,
+            maxLength: 18,
             minLength: 3,
             type: ApplicationCommandOptionType.String,
           },
@@ -76,7 +76,7 @@ const commandInteraction = {
       const gamerTag = interaction.options.getString('gamertag') ?? (await mcidSchema.findOne({ userId: interaction.user.id }))?.be;
       const timeFrame = interaction.options.getString('timeframe');
 
-      if (!gamerTag) return interaction.followUp({ content: '`❌` ゲーマータグを入力してください。`/mymcid`コマンドを使用して入力を省略することも出来ます。' });
+      if (!gamerTag) return interaction.followUp({ content: '`❌` ゲーマータグを入力してください。`/myid`コマンドを使用して入力を省略することも出来ます。' });
       if (gamerTagRegExp.test(gamerTag)) return interaction.followUp({ content: '`❌` ゲーマータグの値が不正です' });
 
       const gameSelect = new ActionRowBuilder().setComponents(

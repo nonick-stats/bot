@@ -31,10 +31,9 @@ const commandInteraction = {
         .setURL('https://discord.gg/fVcjCNn733')
         .setStyle(ButtonStyle.Link),
       new ButtonBuilder()
-        .setCustomId('nonick-stats:disable')
-        .setLabel('ドキュメント(準備中)')
-        .setStyle(ButtonStyle.Secondary)
-        .setDisabled(true),
+        .setLabel('ドキュメント')
+        .setURL('https://docs.nonick-js.com/')
+        .setStyle(ButtonStyle.Link),
     );
 
     interaction.reply({ embeds: [embed], components: [button], ephemeral: true });

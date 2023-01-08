@@ -2,12 +2,12 @@ const { ApplicationCommandOptionType, EmbedBuilder, Colors } = require('discord.
 const mcidSchema = require('../schemas/mcid');
 
 // eslint-disable-next-line no-useless-escape
-const beProfileNameRegExp = new RegExp(/(^[\d\s'])|[^a-zA-Z0-9']/);
+const beProfileNameRegExp = new RegExp(/(^[\d\s'])|[^a-zA-Z0-9\s']/);
 
 /** @type {import('@akki256/discord-interaction').ChatInputRegister} */
 const commandInteraction = {
   data: {
-    name: 'mymcid',
+    name: 'myid',
     description: 'マイクラIDを登録',
     options: [
       // {
@@ -21,7 +21,7 @@ const commandInteraction = {
         name: 'be',
         description: 'be版ID',
         minLength: 3,
-        maxLength: 12,
+        maxLength: 18,
         type: ApplicationCommandOptionType.String,
         required: true,
       },
