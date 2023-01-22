@@ -10,7 +10,7 @@ import { guildId } from '../config.json';
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const interactions = new DiscordInteractions(client);
-interactions.loadInteractions(path.resolve(process.argv[1], '../commands'));
+interactions.loadInteractions(path.resolve(__dirname, './commands'));
 
 client.once(Events.ClientReady, (): void => {
   console.log('[INFO] BOT ready!');
@@ -24,7 +24,7 @@ client.once(Events.ClientReady, (): void => {
     'Memory': `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB | ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)}MB`,
   });
 
-  interactions.registerCommands({ guildId, deleteNoLoad: true });
+  interactions.registerCommands(guildId ?? undefined);
   reloadActivity();
 });
 
