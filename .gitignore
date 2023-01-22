@@ -1,3 +1,8 @@
-.env
+# Directory
 node_modules
+build
+.vscode
+
+# File
+.env
 config.json
