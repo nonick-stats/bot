@@ -1,9 +1,9 @@
-const { Schema, SchemaTypes, model } = require('mongoose');
+import { Schema, SchemaTypes, model } from 'mongoose';
 
-const mcidSchema = new Schema({
+const MinecraftIDs = new Schema({
   userId: { type: SchemaTypes.String, required: true, unique: true },
   java: { type: SchemaTypes.String, default: null },
   be: { type: SchemaTypes.String, default: null },
 });
 
-module.exports = model('mcid', mcidSchema);
+export default model('mcid', MinecraftIDs);
