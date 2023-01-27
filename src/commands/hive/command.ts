@@ -25,16 +25,17 @@ const hiveCommand = new ChatInput(
             name: 'game',
             description: 'ゲーム',
             choices: [
-              { name: 'Treasure Wars ', value: 'wars' },
-              { name: 'Death Run ', value: 'dr' },
-              { name: 'Hide And Seek ', value: 'hide' },
-              { name: 'Survival Games ', value: 'sg' },
-              { name: 'Murder Mystery ', value: 'murder' },
+              { name: 'Treasure Wars', value: 'wars' },
+              { name: 'Death Run', value: 'dr' },
+              { name: 'Hide And Seek', value: 'hide' },
+              { name: 'Survival Games', value: 'sg' },
+              { name: 'Murder Mystery', value: 'murder' },
               { name: 'Sky Wars', value: 'sky' },
-              { name: 'Capture The Flag ', value: 'ctf' },
-              { name: 'Block Drop ', value: 'drop' },
-              { name: 'Ground Wars ', value: 'ground' },
-              { name: 'Just Build ', value: 'build' },
+              { name: 'Capture The Flag', value: 'ctf' },
+              { name: 'Block Drop', value: 'drop' },
+              { name: 'Ground Wars', value: 'ground' },
+              { name: 'Just Build', value: 'build' },
+              { name: 'Block Party', value: 'party' },
             ],
             type: ApplicationCommandOptionType.String,
             required: true,
@@ -103,18 +104,20 @@ const hiveCommand = new ChatInput(
         new StringSelectMenuBuilder()
           .setCustomId('nonick-stats:hive-stats-game')
           .setOptions(
-            { label: 'Treasure Wars', value: 'wars', emoji: Emojies.hive.wars, default: game == 'wars' },
-            { label: 'Death Run', value: 'dr', emoji: Emojies.hive.dr, default: game == 'dr' },
-            { label: 'Hide And Seek', value: 'hide', emoji: Emojies.hive.hide, default: game == 'hide' },
-            { label: 'Survival Games', value: 'sg', emoji: Emojies.hive.sg, default: game == 'sg' },
-            { label: 'Murder Mystery', value: 'murder', emoji: Emojies.hive.murder, default: game == 'murder' },
-            { label: 'Sky Wars', value: 'sky', emoji: Emojies.hive.sky, default: game == 'sky' },
-            { label: 'Capture The Flag', value: 'ctf', emoji: Emojies.hive.ctf, default: game == 'ctf' },
-            { label: 'Block Drop', value: 'drop', emoji: Emojies.hive.drop, default: game == 'drop' },
-            { label: 'Ground Wars', value: 'ground', emoji: Emojies.hive.ground, default: game == 'ground' },
-            { label: 'Just Build', value: 'build', emoji: Emojies.hive.build, default: game == 'build' },
+            { label: 'Treasure Wars', value: 'wars', emoji: Emojies.hive.wars },
+            { label: 'Death Run', value: 'dr', emoji: Emojies.hive.dr },
+            { label: 'Hide And Seek', value: 'hide', emoji: Emojies.hive.hide },
+            { label: 'Survival Games', value: 'sg', emoji: Emojies.hive.sg },
+            { label: 'Murder Mystery', value: 'murder', emoji: Emojies.hive.murder },
+            { label: 'Sky Wars', value: 'sky', emoji: Emojies.hive.sky },
+            { label: 'Capture The Flag', value: 'ctf', emoji: Emojies.hive.ctf },
+            { label: 'Block Drop', value: 'drop', emoji: Emojies.hive.drop },
+            { label: 'Ground Wars', value: 'ground', emoji: Emojies.hive.ground },
+            { label: 'Just Build', value: 'build', emoji: Emojies.hive.build },
+            { label: 'Block Party', value: 'party', emoji: Emojies.hive.party },
           ),
       );
+      gameSelect.components[0].options.find(v => v.data.value == game)?.setDefault(true);
 
       const timeFrameSelect = new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
         new StringSelectMenuBuilder()

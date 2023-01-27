@@ -21,6 +21,7 @@ export async function createHiveStatsCard(data: BaseGameStats, playerName: strin
     ['drop',   'Block Drop'],
     ['ground', 'Ground Wars'],
     ['build',  'Just Build'],
+    ['party',  'BlockParty'],
   ]);
 
   const backGround = await Canvas.loadImage(`src/images/hive/stats/${gamePrefix}.png`);

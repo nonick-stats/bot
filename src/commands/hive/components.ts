@@ -51,7 +51,7 @@ const statsSelect = new SelectMenu(
       })
       .catch((err): void => {
         if (err.response?.status === 404) {
-          interaction.followUp({
+          interaction.editReply({
             content: `${minecraftId}の統計を表示します`,
             embeds: [
               new EmbedBuilder()

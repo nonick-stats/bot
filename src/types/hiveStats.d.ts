@@ -79,3 +79,8 @@ interface JustBuildStats extends BaseGameStats {
   rating_meh_received: number,
   rating_okay_received: number,
 }
+
+interface BlockPartyStats extends BaseGameStats {
+  powerups_collected: number,
+  rounds_survived: number,
+}
