@@ -1,11 +1,11 @@
-import { ActionRowBuilder, ApplicationCommandOptionType, Colors, EmbedBuilder, StringSelectMenuBuilder } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, StringSelectMenuBuilder } from 'discord.js';
 import { ChatInput } from '@akki256/discord-interaction';
-import { beMinecraftIdRegExp } from '../../module/Regexps';
-import { lock } from '../../../config.json';
-import MinecraftIDs from '../../schemas/MinecraftIDs';
-import Emojies from '../../module/Emojies';
+import { beMinecraftIdRegExp } from '../../../module/Regexps';
+import { lock } from '../../../../config.json';
+import { createHiveStatsCard } from '../../../module/canvas/hive';
+import MinecraftIDs from '../../../schemas/MinecraftIDs';
+import Emojies from '../../../module/Emojies';
 import axios from 'axios';
-import { createHiveStatsCard } from '../../module/canvas/hive';
 
 const API = new Map([
   [ 'month', 'https://api.playhive.com/v0/game/monthly/player' ],
@@ -78,21 +78,15 @@ const hiveCommand = new ChatInput(
     dmPermission: false,
   },
   { coolTime: 15_000 },
-  async (interaction): Promise<void> => {
+  async (interaction) => {
     const minecraftId = interaction.options.getString('gamertag') ?? (await MinecraftIDs.findOne({ userId: interaction.user.id }))?.be;
 
-    if (lock.hive) {
-      interaction.reply({ content: '`😖` 現在APIサーバーに接続できません。復旧までお待ちください', ephemeral: true });
-      return;
-    }
-    else if (!minecraftId) {
-      interaction.reply({ content: '`❌` ゲーマータグを入力してください。`/myid`コマンドを使用して入力を省略することも出来ます。', ephemeral: true });
-      return;
-    }
-    else if (beMinecraftIdRegExp.test(minecraftId)) {
-      interaction.reply({ content: '`❌` 無効なゲーマータグが入力されました。', ephemeral: true });
-      return;
-    }
+    if (lock.hive)
+      return interaction.reply({ content: '`😖` 現在APIサーバーに接続できません。復旧までお待ち下さい。', ephemeral: true });
+    if (!minecraftId)
+      return interaction.reply({ content: '`❌` ゲーマータグを入力してください。`/myid`コマンドを使用して入力を省略することも出来ます。', ephemeral: true });
+    if (beMinecraftIdRegExp.test(minecraftId))
+      return interaction.reply({ content: '`❌` 無効なゲーマータグが入力されました。', ephemeral: true });
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -117,7 +111,6 @@ const hiveCommand = new ChatInput(
             { label: 'Block Party', value: 'party', emoji: Emojies.hive.party },
           ),
       );
-      gameSelect.components[0].options.find(v => v.data.value == game)?.setDefault(true);
 
       const timeFrameSelect = new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
         new StringSelectMenuBuilder()
@@ -128,17 +121,28 @@ const hiveCommand = new ChatInput(
           ),
       );
 
-      axios.get(`${API.get(timeFrame)}/${game}/${minecraftId}`, { timeout: 10000 })
-        .then(async (res): Promise<void> => {
+      const publicButton = new ActionRowBuilder<ButtonBuilder>().setComponents(
+        new ButtonBuilder()
+          .setCustomId('nonick-stats:public')
+          .setLabel('公開')
+          .setStyle(ButtonStyle.Success)
+          .setEmoji('1073880855644225637'),
+      );
+
+      gameSelect.components[0].options.find(v => v.data.value == game)?.setDefault(true);
+
+      axios
+        .get(`${API.get(timeFrame)}/${game}/${minecraftId}`, { timeout: 10000 })
+        .then(async (res) => {
           interaction.followUp({
             content: `${minecraftId}の統計を表示します`,
             files: [await createHiveStatsCard(res?.data as BaseGameStats, minecraftId, game)],
-            components: [gameSelect, timeFrameSelect],
+            components: [gameSelect, timeFrameSelect, publicButton],
           });
         })
-        .catch((err): void => {
+        .catch((err)=> {
           if (err.response?.status === 404) {
-            interaction.followUp({
+            return interaction.followUp({
               content: `${minecraftId}の統計を表示します`,
               embeds: [
                 new EmbedBuilder()
@@ -147,7 +151,6 @@ const hiveCommand = new ChatInput(
               ],
               components: [gameSelect, timeFrameSelect],
             });
-            return;
           }
           interaction.followUp('`❌` APIサーバーに接続できませんでした');
         });

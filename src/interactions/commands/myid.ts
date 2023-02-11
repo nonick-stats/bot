@@ -1,7 +1,7 @@
 import { ChatInput } from '@akki256/discord-interaction';
 import { ApplicationCommandOptionType, Colors, EmbedBuilder } from 'discord.js';
-import { beMinecraftIdRegExp } from '../module/Regexps';
-import MinecraftIDs from '../schemas/MinecraftIDs';
+import { beMinecraftIdRegExp } from '../../module/Regexps';
+import MinecraftIDs from '../../schemas/MinecraftIDs';
 
 const myidCommand = new ChatInput(
   {

@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { StringSelectMenuComponent, ActionRowBuilder, StringSelectMenuBuilder, EmbedBuilder, Colors } from 'discord.js';
+import { StringSelectMenuComponent, ActionRowBuilder, StringSelectMenuBuilder, EmbedBuilder, Colors, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { SelectMenu, SelectMenuType } from '@akki256/discord-interaction';
-import { createHiveStatsCard } from '../../module/canvas/hive';
+import { createHiveStatsCard } from '../../../module/canvas/hive';
 
 const API = new Map([
   [ 'month', 'https://api.playhive.com/v0/game/monthly/player' ],
@@ -38,6 +38,14 @@ const statsSelect = new SelectMenu(
       ],
     });
 
+    const publicButton = new ActionRowBuilder<ButtonBuilder>().setComponents(
+      new ButtonBuilder()
+        .setCustomId('nonick-stats:public')
+        .setLabel('公開')
+        .setStyle(ButtonStyle.Success)
+        .setEmoji('1073880855644225637'),
+    );
+
     axios.get(`${API.get(timeFrame!)}/${game}/${minecraftId}`, { timeout: 10000 })
       .then(async (res): Promise<void> => {
         interaction.editReply({
@@ -46,6 +54,7 @@ const statsSelect = new SelectMenu(
           components: [
             isGameSelect ? changeSelectMenuDisabled(interactionSelect, false) : changeSelectMenuDisabled(interaction.message.components[0].components[0] as StringSelectMenuComponent, false),
             !isGameSelect ? changeSelectMenuDisabled(interactionSelect, false) : changeSelectMenuDisabled(interaction.message.components[1].components[0] as StringSelectMenuComponent, false),
+            publicButton,
           ],
         });
       })

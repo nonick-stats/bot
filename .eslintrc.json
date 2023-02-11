@@ -10,12 +10,13 @@
 	"parserOptions": {
 		"ecmaVersion": 13
 	},
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint"],
 	"rules": {
 		"arrow-spacing": ["warn", { "before": true, "after": true }],
 		"comma-dangle": ["error", "always-multiline"],
 		"comma-spacing": "error",
 		"comma-style": "error",
-		"curly": ["error", "multi-line", "consistent"],
 		"dot-location": ["error", "property"],
 		"handle-callback-err": "off",
 		"keyword-spacing": "error",

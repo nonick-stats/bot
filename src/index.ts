@@ -3,14 +3,14 @@ import path from 'path';
 dotenv.config();
 
 import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js';
-import { DiscordInteractions, DiscordInteractionsErrorCodes } from '@akki256/discord-interaction';
+import { DiscordInteractions, DiscordInteractionsErrorCodes, InteractionsError } from '@akki256/discord-interaction';
 import mongoose, { version } from 'mongoose';
 import { guildId } from '../config.json';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const interactions = new DiscordInteractions(client);
-interactions.loadInteractions(path.resolve(__dirname, './commands'));
+interactions.loadInteractions(path.resolve(__dirname, './interactions'));
 
 client.once(Events.ClientReady, (): void => {
   console.log('[INFO] BOT ready!');
@@ -35,12 +35,12 @@ client.on(Events.InteractionCreate, (interaction): void => {
   if (!interaction.isRepliable()) return;
 
   interactions.run(interaction)
-    .catch(({ error }) => {
-      if (error.code == DiscordInteractionsErrorCodes.CommandHasCoolTime) {
+    .catch((err) => {
+      if (err instanceof InteractionsError && err.code == DiscordInteractionsErrorCodes.CommandHasCoolTime) {
         interaction.reply({ content: '`⌛` コマンドはクールダウン中です', ephemeral: true });
         return;
       }
-      console.log(error);
+      console.log(err);
     });
 });
 
