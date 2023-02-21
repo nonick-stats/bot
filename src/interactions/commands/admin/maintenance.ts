@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { ApplicationCommandOptionType, PermissionFlagsBits, EmbedBuilder, Colors } from 'discord.js';
 import { ChatInput } from '@akki256/discord-interaction';
-import { adminGuild, adminUser } from '../../../config.json';
+import { adminGuild, adminUser } from '../../../../config.json';
 
 const maintenanceCommand = new ChatInput(
   {

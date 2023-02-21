@@ -64,7 +64,7 @@ export async function createHiveStatsCard(data: BaseGameStats, playerName: strin
   context.font = '30 Minecraft';
   context.fillText('NoNICK.stats', 10, canvas.height - 10);
 
-  return new AttachmentBuilder(await canvas.encode('png'), { name: `${playerName}-StatsCard.png` });
+  return new AttachmentBuilder(await canvas.encode('jpeg'), { name: `${playerName}-StatsCard.jpeg` });
 }
 
 export const CardTextStyle = {
