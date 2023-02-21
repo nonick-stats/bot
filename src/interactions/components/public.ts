@@ -34,7 +34,7 @@ const publicButton = new Button(
       .then(() => {
         interaction.update({ components: [interaction.message.components[0], interaction.message.components[1]] });
         publicCoolDown.add(interaction.user.id);
-        setTimeout(() => publicCoolDown.delete(interaction.user.id), 180_000);
+        setTimeout(() => publicCoolDown.delete(interaction.user.id), 30_000);
       })
       .catch(() => interaction.reply({ content: '`❌` 画像の送信に失敗しました', ephemeral: true }));
 
