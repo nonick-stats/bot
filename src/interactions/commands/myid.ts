@@ -31,7 +31,7 @@ const myidCommand = new ChatInput(
 
     const bedrockId = interaction.options.getString('be', true);
 
-    if (Gamertag.Bedrock.test(bedrockId))
+    if (!Gamertag.Bedrock.test(bedrockId))
       return interaction.reply({ content: '`❌` 利用できない文字が含まれています', ephemeral: true });
 
     const UpdatedMCID = await MinecraftIDs.findOneAndUpdate(
