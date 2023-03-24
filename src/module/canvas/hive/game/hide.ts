@@ -1,9 +1,9 @@
 import { Canvas, SKRSContext2D } from '@napi-rs/canvas';
 import { CardTextStyle, toRate } from '..';
-import MinecraftColors from '../../../MinecraftColors';
+import { Colors } from '../../../format';
 
 export default function(canvas: Canvas, context: SKRSContext2D, data: HideAndSeekStats): void {
-  context.fillStyle = MinecraftColors.red;
+  context.fillStyle = Colors.red;
   context.font = CardTextStyle.statsName;
   context.fillText('プレイ数', canvas.width * 0.25, 300);
   context.fillText('勝利数', canvas.width * 0.50, 300);
@@ -14,7 +14,7 @@ export default function(canvas: Canvas, context: SKRSContext2D, data: HideAndSee
   context.fillText(String(data.victories || 0), canvas.width * 0.50, 400);
   context.fillText(`${(toRate(data.victories, data.played))} %`, canvas.width * 0.75, 400);
 
-  context.fillStyle = MinecraftColors.yellow;
+  context.fillStyle = Colors.yellow;
   context.font = CardTextStyle.statsName;
   context.fillText('隠れ側キル数', canvas.width * 0.25, 500);
   context.fillText('鬼側キル数', canvas.width * 0.50, 500);

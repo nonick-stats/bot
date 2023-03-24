@@ -1,4 +1,4 @@
-export default {
+export const Emojies = {
   hive: {
     wars: '1057547297816317952',
     murder: '1057547324869582889',
@@ -15,4 +15,14 @@ export default {
     arcade: '1061655941138874378',
     party: '1068429978217238620',
   },
+};
+
+export const Colors = {
+  red: '#FF5555',
+  yellow: '#FFFB45',
+  aqua: '#55FFFF',
+  pink: '#FF55FF',
+  white: '#FFFFFF',
+  black: '#000000',
+  gray: '#AAAAAA',
 };

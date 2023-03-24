@@ -1,9 +1,9 @@
 import { Canvas, SKRSContext2D } from '@napi-rs/canvas';
 import { CardTextStyle } from '..';
-import MinecraftColors from '../../../MinecraftColors';
+import { Colors } from '../../../format';
 
 export default function(canvas: Canvas, context: SKRSContext2D, data: DeathRunStats): void {
-  context.fillStyle = MinecraftColors.red;
+  context.fillStyle = Colors.red;
   context.font = CardTextStyle.statsName;
   context.fillText('プレイ数', canvas.width * 0.25, 300);
   context.fillText('ゴール数', canvas.width * 0.50, 300);
@@ -14,7 +14,7 @@ export default function(canvas: Canvas, context: SKRSContext2D, data: DeathRunSt
   context.fillText(String(data.victories || 0), canvas.width * 0.50, 400);
   context.fillText(String(data.deaths || 0), canvas.width * 0.75, 400);
 
-  context.fillStyle = MinecraftColors.yellow;
+  context.fillStyle = Colors.yellow;
   context.font = CardTextStyle.statsName;
   context.fillText('通過したチェックポイント', canvas.width * 0.40, 500);
   context.fillText('キル数', canvas.width * 0.75, 500);

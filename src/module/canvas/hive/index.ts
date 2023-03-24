@@ -1,6 +1,6 @@
 import Canvas from '@napi-rs/canvas';
 import { AttachmentBuilder } from 'discord.js';
-import MinecraftColors from '../../MinecraftColors';
+import { Colors } from '../../format';
 
 export async function createHiveStatsCard(data: BaseGameStats, playerName: string, gamePrefix: string): Promise<AttachmentBuilder> {
   Canvas.GlobalFonts.registerFromPath('src/fonts/minecraft.ttf', 'Minecraft');
@@ -31,7 +31,7 @@ export async function createHiveStatsCard(data: BaseGameStats, playerName: strin
 
   // TextShadow
   context.shadowBlur = 2;
-  context.shadowColor = MinecraftColors.black;
+  context.shadowColor = Colors.black;
   context.shadowOffsetX = 5;
   context.shadowOffsetY = 5;
 
@@ -42,24 +42,24 @@ export async function createHiveStatsCard(data: BaseGameStats, playerName: strin
 
   // GameName
   context.font = '40px Minecraft';
-  context.fillStyle = MinecraftColors.white;
+  context.fillStyle = Colors.white;
   context.fillText(`The Hive - ${Game.get(gamePrefix)}`, canvas.width / 2, 200);
 
   const addStatsModule = await import(`./game/${gamePrefix}`);
-  addStatsModule.default(canvas, context, data as TreasureWarsStats);
+  addStatsModule.default(canvas, context, data);
 
   if (data.human_index) {
-    context.fillStyle = MinecraftColors.white;
+    context.fillStyle = Colors.white;
     context.font = '40 PixelMPlus';
     context.fillText(`タイムフレーム: 月間 (${data.human_index}位)`, canvas.width * 0.5, canvas.height - 40);
   }
   else {
-    context.fillStyle = MinecraftColors.white;
+    context.fillStyle = Colors.white;
     context.font = '40 PixelMPlus';
     context.fillText('タイムフレーム: すべての期間', canvas.width * 0.5, canvas.height - 40);
   }
 
-  context.fillStyle = MinecraftColors.gray;
+  context.fillStyle = Colors.gray;
   context.textAlign = 'left';
   context.font = '30 Minecraft';
   context.fillText('NoNICK.stats', 10, canvas.height - 10);

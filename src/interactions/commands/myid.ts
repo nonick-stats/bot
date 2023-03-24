@@ -1,7 +1,7 @@
 import { ChatInput } from '@akki256/discord-interaction';
 import { ApplicationCommandOptionType, Colors, EmbedBuilder } from 'discord.js';
-import { beMinecraftIdRegExp } from '../../module/Regexps';
-import MinecraftIDs from '../../schemas/MinecraftIDs';
+import MinecraftIDs from '../../../src/schemas/MinecraftIDs';
+import { BedrockIdRegExp } from '../../module/regexps';
 
 const myidCommand = new ChatInput(
   {
@@ -27,17 +27,16 @@ const myidCommand = new ChatInput(
     dmPermission: false,
   },
   { coolTime: 30_000 },
-  async (interaction): Promise<void> => {
-    const beMinecraftId = interaction.options.getString('be', true);
+  async (interaction) => {
 
-    if (beMinecraftIdRegExp.test(beMinecraftId)) {
-      interaction.reply({ content: '`❌` 利用できない文字が含まれています', ephemeral: true });
-      return;
-    }
+    const bedrockId = interaction.options.getString('be', true);
+
+    if (BedrockIdRegExp.test(bedrockId))
+      return interaction.reply({ content: '`❌` 利用できない文字が含まれています', ephemeral: true });
 
     const UpdatedMCID = await MinecraftIDs.findOneAndUpdate(
       { userId: interaction.user.id },
-      { $set: { be: beMinecraftId } },
+      { $set: { be: bedrockId } },
       { upsert: true, new: true },
     );
 
@@ -52,7 +51,9 @@ const myidCommand = new ChatInput(
       ],
       ephemeral: true,
     });
-    UpdatedMCID.save();
+
+    UpdatedMCID.save({ wtimeout: 1500 });
+
   },
 );
 

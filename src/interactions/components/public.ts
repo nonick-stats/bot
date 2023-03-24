@@ -20,17 +20,18 @@ const publicButton = new Button(
       if (!interaction.channel.parent?.permissionsFor(interaction.guild.members.me)?.has(PermissionFlagsBits.EmbedLinks | PermissionFlagsBits.SendMessagesInThreads))
         return interaction.reply({ content: '`❌` BOTの権限不足により、このスレッドで埋め込みを送信できません。' });
     }
-    else if (!interaction.appPermissions?.has(PermissionFlagsBits.EmbedLinks | PermissionFlagsBits.SendMessages)) {
+    else if (!interaction.appPermissions?.has(PermissionFlagsBits.EmbedLinks | PermissionFlagsBits.SendMessages))
       return interaction.reply({ content: '`❌` BOTの権限不足により、このチャンネルで埋め込みを送信できません。', ephemeral: true });
-    }
 
     interaction.channel
-      .send({ embeds: [
-        new EmbedBuilder()
-          .setColor(resolveColor('#2f3136'))
-          .setImage(interaction.message.attachments.first()?.url || null)
-          .setFooter({ text: `by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL() }),
-      ] })
+      .send({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(resolveColor('#2f3136'))
+            .setImage(interaction.message.attachments.first()?.url || null)
+            .setFooter({ text: `by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL() }),
+        ],
+      })
       .then(() => {
         interaction.update({ components: [interaction.message.components[0], interaction.message.components[1]] });
         publicCoolDown.add(interaction.user.id);
