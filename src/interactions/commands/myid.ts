@@ -1,7 +1,7 @@
 import { ChatInput } from '@akki256/discord-interaction';
 import { ApplicationCommandOptionType, Colors, EmbedBuilder } from 'discord.js';
 import MinecraftIDs from '../../../src/schemas/MinecraftIDs';
-import { BedrockIdRegExp } from '../../module/regexps';
+import { Gamertag } from '../../module/validate';
 
 const myidCommand = new ChatInput(
   {
@@ -31,7 +31,7 @@ const myidCommand = new ChatInput(
 
     const bedrockId = interaction.options.getString('be', true);
 
-    if (BedrockIdRegExp.test(bedrockId))
+    if (Gamertag.Bedrock.test(bedrockId))
       return interaction.reply({ content: '`❌` 利用できない文字が含まれています', ephemeral: true });
 
     const UpdatedMCID = await MinecraftIDs.findOneAndUpdate(

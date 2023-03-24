@@ -1,28 +1,121 @@
-export const Emojies = {
-  hive: {
-    wars: '1057547297816317952',
-    murder: '1057547324869582889',
-    sky: '1057547294167269506',
-    sg: '1057547307266080778',
-    build: '1057547305395425281',
-    dr: '1057547292107870260',
-    drop: '1057547295895322686',
-    ground: '1057547308721516666',
-    bridge: '1057547303235362906',
-    hide: '1057547299854753833',
-    ctf: '1057906322391191565',
-    hub: '1061656648441147442',
-    arcade: '1061655941138874378',
-    party: '1068429978217238620',
-  },
-};
+export class PlaceHolder<T extends object> {
+  private holder: Map<string, { key: string, callback: (params: Partial<Readonly<T>>) => unknown }>;
+  private startBracket!: string;
+  private endBracket!: string;
+  constructor(private _prefix: PlaceHolder.Prefix = '!', brackets: PlaceHolder.Brackets = '[]') {
+    this.holder = new Map();
+    this.brackets = brackets;
+  }
 
-export const Colors = {
-  red: '#FF5555',
-  yellow: '#FFFB45',
-  aqua: '#55FFFF',
-  pink: '#FF55FF',
-  white: '#FFFFFF',
-  black: '#000000',
-  gray: '#AAAAAA',
-};
+  private _parse(str: string, params: Partial<Readonly<T>>): string {
+    return str.replace(new RegExp(`(?<!\\\\)\\${this._prefix}(?<!\\\\)\\${this.startBracket}(\\w+)(?<!\\\\)\\${this.endBracket}`, 'g'), (input, key) => {
+      const placeholder = this.holder.get(key);
+      return String(placeholder?.callback?.(params) || input);
+    });
+  }
+
+  parse(str: string, params: Partial<Readonly<T>>): string;
+  parse<U extends object>(obj: Readonly<U>, params: Partial<Readonly<T>>): U;
+  parse(str: string | Readonly<object>, params: Partial<Readonly<T>>) {
+    if (typeof str === 'string') return this._parse(str, params);
+    return JSON.parse(JSON.stringify(str), (_, value) => {
+      if (typeof value === 'string') return this._parse(value, params);
+      return value;
+    });
+  }
+
+  register(key: string, callback: (params: Partial<Readonly<T>>) => unknown, force = false) {
+    if (!key) throw new TypeError('A placeholder must be specified');
+    if (!force && this.holder.has(key)) throw new TypeError('The placeholder is already registered');
+    this.holder.set(key, { key, callback });
+    return this;
+  }
+
+  list() {
+    return Array.from(this.holder.keys(), key => `${this._prefix}${this.startBracket}${key}${this.endBracket}`);
+  }
+
+  keys() {
+    return this.holder.keys();
+  }
+
+  has(key: string) {
+    return this.holder.has(key);
+  }
+
+  get prefix() {
+    return this._prefix;
+  }
+
+  set prefix(prefix: PlaceHolder.Prefix) {
+    if (!PlaceHolder.allowPrefix.includes(prefix)) throw new TypeError(`${prefix} can't be used for prefix. Only the following values can be used (${PlaceHolder.allowPrefix.join(',')})`);
+    this._prefix = prefix;
+  }
+
+  get brackets() {
+    return [this.startBracket, this.endBracket].join('') as PlaceHolder.Brackets;
+  }
+
+  set brackets(brackets: PlaceHolder.Brackets) {
+    if (!PlaceHolder.allowBrackets.includes(brackets)) throw new TypeError(`${brackets} can't be used for prefix. Only the following values can be used (${PlaceHolder.allowBrackets.join(',')})`);
+    const [start, end] = brackets.split('');
+    this.startBracket = start;
+    this.endBracket = end;
+  }
+}
+
+export namespace PlaceHolder {
+  export const allowPrefix = ['!', '#', '%', '&', '-', '=', '^'] as const;
+  export type Prefix = typeof allowPrefix[number];
+  export const allowBrackets = ['[]', '{}', '()', '<>'] as const;
+  export type Brackets = typeof allowBrackets[number];
+}
+
+export namespace Duration {
+  const durations = {
+    y: { time: 365 * 24 * 60 * 60 * 1000, long: 'year' },
+    w: { time: 7 * 24 * 60 * 60 * 1000, long: 'week' },
+    d: { time: 24 * 60 * 60 * 1000, long: 'day' },
+    h: { time: 60 * 60 * 1000, long: 'hour' },
+    m: { time: 60 * 1000, long: 'minute' },
+    s: { time: 1000, long: 'second' },
+    ms: { time: 1, long: 'millisecond' },
+  };
+  export type List = keyof typeof durations;
+
+  const holder = new PlaceHolder<Partial<Record<List, number>>>('%', '{}');
+  Object.keys(durations).forEach(key => {
+    holder.register(key, data => {
+      const date = data[key as List];
+      return date ? date.toString() : '0';
+    });
+  });
+
+  export function toMS(text: string) {
+    const match = text.replace(/\s+/g, '').match(RegExp(Object.entries(durations).reduce((p, [short, { long }]) => p + `((?<${short}>-?(\\d*\\.\\d+|\\d+))(${short}|${long}))?`, ''), 'i'));
+    return Object.entries(match?.groups ?? {}).reduce((p, [key, value = 0]) => p + Number(value) * durations[key as List].time || 0, 0);
+  }
+
+  export function parse(ms = 0, pass: List[] = []): Partial<Record<List, number>> {
+    const absMs = Math.abs(ms);
+    return Object.fromEntries(Object.entries(durations)
+      .filter(([short]) => !pass.includes(short as List))
+      .sort(([, { time: a }], [, { time: b }]) => b - a)
+      .map(([k, v], i, a) => ({ ...v, short: k, diff: a[i - 1]?.[1]?.time / v.time }))
+      .map(({ short, long, time, diff }) => ({ short, long, duration: isNaN(diff) ? Math.floor(absMs / time) : Math.floor(Math.floor(absMs / time) % diff) }))
+      .filter(({ duration }) => duration !== 0)
+      .map(v => [v.short, v.duration])) as Partial<Record<List, number>>;
+  }
+
+  export function format(ms: number, compact: boolean, pass: List[]): string;
+  export function format(ms: number, template: string): string;
+  export function format(ms = 0, template: string | boolean = '', pass: List[] = []): string {
+    if (typeof template === 'string' && template)
+      return holder.parse(template, parse(ms, Object.keys(durations).filter(v => !template.includes(`%{${v}}`)) as List[]));
+
+    return Object.entries(parse(ms, pass)).map(([short, duration]) => {
+      const { long } = durations[short as List];
+      return `${Math.sign(ms) === -1 ? '-' : ''}${duration}${template ? short : long}`;
+    }).join(' ');
+  }
+}
