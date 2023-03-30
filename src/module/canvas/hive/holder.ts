@@ -170,7 +170,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			fields: [
 				{ title: 'キル数', data: '![murders]' },
 				{ title: 'デス数', data: '![deaths]' },
-				{ title: 'K/D比', data: '![murderRate]' },
+				{ title: 'K/D比', data: '![killRate]' },
 				{ title: 'マーダー退治数', data: '![murderer_eliminations]', color: Colors.pink },
 			],
 			color: Colors.yellow,
@@ -270,7 +270,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 				{ title: 'キル数', data: '![kills]' },
 				{ title: 'ﾌｧｲﾅﾙｷﾙ数', data: '![final_kills]' },
 				{ title: 'デス数', data: '![deaths]' },
-				{ title: 'K/D率', data: '![warsRate]', color: Colors.aqua },
+				{ title: 'K/D率', data: '![killRate]', color: Colors.aqua },
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
@@ -283,5 +283,4 @@ const rate = (win?: number, play?: number) => (win || 0) / (play || 1);
 
 export const holder = new PlaceHolder<Hive.AllGameStats>()
 	.register('victoryRate', ({ played, victories }) => `${Math.round(rate(victories, played) * 100)} %`)
-	.register('killRate', ({ deaths, kills, murders }) => rate(kills || murders, deaths).toFixed(2))
-	.register('warsRate', ({ deaths, kills }) => rate(deaths, kills).toFixed(2));
+	.register('killRate', ({ deaths, kills, murders }) => rate(kills || murders, deaths).toFixed(2));
