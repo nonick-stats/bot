@@ -1,150 +1,54 @@
-import Canvas from '@napi-rs/canvas';
-import { AttachmentBuilder } from 'discord.js';
-import MinecraftColors from '../../MinecraftColors';
+import axios from "axios";
+import { Hive } from "../../../types/responses";
+import { canvasHeight, createCard } from "../index";
+import { holder, templates } from "./holder";
 
-export async function createHiveStatsCard(data: BaseGameStats, playerName: string, gamePrefix: string): Promise<AttachmentBuilder> {
-  Canvas.GlobalFonts.registerFromPath('src/fonts/minecraft.ttf', 'Minecraft');
-  Canvas.GlobalFonts.registerFromPath('src/fonts/minecraftTen.ttf', 'MinecraftTen');
-  Canvas.GlobalFonts.registerFromPath('src/fonts/pixelMplus12-Regular.ttf', 'PixelMPlus');
-
-  const canvas = Canvas.createCanvas(1280, 720);
-  const context = canvas.getContext('2d');
-
-  const Game = new Map([
-    ['wars', 'Treasure Wars'],
-    ['dr',     'Death Run'],
-    ['hide',   'Hide And Seek'],
-    ['sg',     'Survival Games'],
-    ['murder', 'Murder Mystery'],
-    ['sky',    'Sky Wars'],
-    ['ctf',    'Capture The Flag'],
-    ['drop',   'Block Drop'],
-    ['ground', 'Ground Wars'],
-    ['build',  'Just Build'],
-    ['party',  'BlockParty'],
-  ]);
-
-  const backGround = await Canvas.loadImage(`src/images/hive/stats/${gamePrefix}.png`);
-  context.drawImage(backGround, 0, 0, canvas.width, canvas.height);
-
-  context.textAlign = 'center';
-
-  // TextShadow
-  context.shadowBlur = 2;
-  context.shadowColor = MinecraftColors.black;
-  context.shadowOffsetX = 5;
-  context.shadowOffsetY = 5;
-
-  // PlayerName
-  context.font = '110px MinecraftTen';
-  context.fillStyle = '#55FF55';
-  context.fillText(playerName, canvas.width / 2, 125);
-
-  // GameName
-  context.font = '40px Minecraft';
-  context.fillStyle = MinecraftColors.white;
-  context.fillText(`The Hive - ${Game.get(gamePrefix)}`, canvas.width / 2, 200);
-
-  const addStatsModule = await import(`./game/${gamePrefix}`);
-  addStatsModule.default(canvas, context, data as TreasureWarsStats);
-
-  if (data.human_index) {
-    context.fillStyle = MinecraftColors.white;
-    context.font = '40 PixelMPlus';
-    context.fillText(`タイムフレーム: 月間 (${data.human_index}位)`, canvas.width * 0.5, canvas.height - 40);
-  }
-  else {
-    context.fillStyle = MinecraftColors.white;
-    context.font = '40 PixelMPlus';
-    context.fillText('タイムフレーム: すべての期間', canvas.width * 0.5, canvas.height - 40);
-  }
-
-  context.fillStyle = MinecraftColors.gray;
-  context.textAlign = 'left';
-  context.font = '30 Minecraft';
-  context.fillText('NoNICK.stats', 10, canvas.height - 10);
-
-  return new AttachmentBuilder(await canvas.encode('jpeg'), { name: `${playerName}-StatsCard.jpeg` });
-}
-
-export const CardTextStyle = {
-  statsName: '50px PixelMPlus',
-  statsValue: '65px Minecraft',
+export const games: Record<keyof Hive.Games, string> = {
+	wars: 'Treasure Wars',
+	dr: 'Death Run',
+	hide: 'Hide And Seek',
+	sg: 'Survival Games',
+	murder: 'Murder Mystery',
+	sky: 'Sky Wars',
+	ctf: 'Capture The Flag',
+	drop: 'Block Drop',
+	ground: 'Ground Wars',
+	build: 'Just Build',
+	party: 'BlockParty',
 };
 
-export function toRate(win: number, played: number): number {
-  const rate = Math.round((win / played) * 100);
-  if (!isFinite(rate)) return 0;
-  return rate;
+const endpoints = {
+	month: 'https://api.playhive.com/v0/game/monthly/player',
+	all: 'https://api.playhive.com/v0/game/all',
+};
+
+export type timeframe = keyof typeof endpoints;
+
+export async function createHiveCard<T extends keyof Hive.Games>(game: T, timeframe: timeframe, gamertag: string) {
+	return await axios.get<Hive.Games[T]>(`${endpoints[timeframe]}/${game}/${gamertag}`, { timeout: 10_000 }).then(({ data }) => {
+		if (!data) throw new Error('`❌` 予期しないエラーが発生しました。\n(APIサーバーが落ちている可能性があります)')
+
+		Object.keys(data).map(key => {
+			if (!holder.has(key)) holder.register(key, data => String(data[key as keyof Hive.AllGameStats] || 0));
+		});
+		return createCard(`src/images/hive/stats/${game}.png`,
+			{
+				height: 125,
+				fields: [{ title: gamertag, font: '110px MinecraftTen', color: '#55FF55' }]
+			},
+			{
+				height: 200,
+				fields: [{ title: `The Hive - ${games[game]}`, font: '40px Minecraft' }]
+			},
+			...holder.parse(templates[game], data),
+			{
+				height: canvasHeight - 40,
+				fields: [{ title: `タイムフレーム: ${data.human_index ? `月間 (${data.human_index}位)` : 'すべての期間'}` }],
+				font: '40px PixelMPlus',
+			}
+		);
+	}).catch(({ response }) => {
+		if (response?.status === 404) throw new Error('`❌` 選択した期間にプレイヤーが一回もこのゲームを遊んでいません');
+		throw new Error('`❌` 予期しないエラーが発生しました。\n(APIサーバーが落ちている可能性があります)');
+	});
 }
-
-// 開発途中 (Javascript)
-// async function createHiveLevelsCard(data, playerName, categoryPrefix) {
-//   const Category = new Map([
-//     ['basic', 'Basic Game'],
-//     ['arcade', 'Arcade Game'],
-//   ]);
-
-//   const Style = {
-//     gameName: 'bold 35px Minecraft',
-//     level: '40px Minecraft',
-//   };
-
-//   const canvas = Canvas.createCanvas(1280, 720);
-//   const context = canvas.getContext('2d');
-
-//   const backGround = await Canvas.loadImage(`images/hive/${categoryPrefix}Hub.png`);
-//   context.drawImage(backGround, 0, 0, canvas.width, canvas.height);
-
-//   context.textAlign = 'center';
-
-//   // TextShadow
-//   context.shadowBlur = 2;
-//   context.shadowcolors = colors.black;
-//   context.shadowOffsetX = 5;
-//   context.shadowOffsetY = 5;
-
-//   // PlayerName
-//   context.font = '110px MinecraftTen';
-//   context.fillStyle = '#55FF55';
-//   context.fillText(playerName, canvas.width / 2, 125);
-
-//   // Title
-//   context.font = '40px Minecraft';
-//   context.fillStyle = colors.white;
-//   context.fillText(`The Hive - ${Category.get(categoryPrefix)} Levels`, canvas.width / 2, 200);
-
-//   if (categoryPrefix == 'basic') {
-//     context.fillStyle = colors.yellow;
-//     context.font = Style.gameName;
-//     context.fillText('Treasure Wars', canvas.width * 0.20, 300);
-//   }
-
-//   context.fillStyle = colors.gray;
-//   context.textAlign = 'left';
-//   context.font = '30 Minecraft';
-//   context.fillText('NoNICK.stats', 10, canvas.height - 10);
-
-//   return new AttachmentBuilder(await canvas.encode('png'), { name: `${playerName}-LevelCard.png` });
-// }
-
-// function toRate(win, played) {
-//   const rate = Math.round((win / played) * 100);
-//   if (!isFinite(rate)) return '0';
-//   return rate;
-// }
-
-// function getLevel(xp, game) {
-//   const xpChart = new Map([
-//     ['wars', { inc: 150, cap: 52 }],
-//     ['dr', { inc: 200, cap: 42 }],
-//     ['hide', { inc: 100, cap: null }],
-//     ['murder', { inc: 100, cap: 82 }],
-//     ['sg', { inc: 150, cap: null }],
-//     ['sky', { inc: 150, cap: 52 }],
-//     ['ctf', { inc: 150, cap: null }],
-//     ['drop', { inc: 150, cap: 22 }],
-//     ['ground', { inc: 150, cap: null }],
-//     ['build', { inc: 100, cap: null }],
-//   ]);
-// }

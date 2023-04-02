@@ -9,7 +9,8 @@ const infoCommand = new ChatInput(
     description: 'このBOTについて',
     dmPermission: true,
   },
-  (interaction): void => {
+  (interaction) => {
+
     interaction.reply({
       embeds: [
         new EmbedBuilder()
@@ -37,6 +38,7 @@ const infoCommand = new ChatInput(
       ],
       ephemeral: true,
     });
+
   },
 );
 

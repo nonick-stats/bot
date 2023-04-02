@@ -1,1 +1,0 @@
-export const beMinecraftIdRegExp = /(^[\d\s'])|[^a-zA-Z0-9\s']/;

@@ -36,7 +36,7 @@ client.on(Events.InteractionCreate, (interaction): void => {
 
   interactions.run(interaction)
     .catch((err) => {
-      if (err instanceof InteractionsError && err.code == DiscordInteractionsErrorCodes.CommandHasCoolTime) {
+      if (err instanceof InteractionsError && err.code === DiscordInteractionsErrorCodes.CommandHasCoolTime) {
         interaction.reply({ content: '`⌛` コマンドはクールダウン中です', ephemeral: true });
         return;
       }

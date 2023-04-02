@@ -18,19 +18,13 @@ const guildCheck = new ChatInput(
     dmPermission: false,
   },
   { guildId: adminGuild },
-  async (interaction): Promise<void> => {
-    if (!adminUser.includes(interaction.user.id)) {
-      interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription('`❌` 権限がありません')
-            .setColor(Colors.Red),
-        ],
-        ephemeral: true });
-      return;
-    }
+  async (interaction) => {
+    if (!adminUser.includes(interaction.user.id)) return interaction.reply({
+      embeds: [new EmbedBuilder().setDescription('`❌` 権限がありません').setColor(Colors.Red)],
+      ephemeral: true,
+    });
 
-    const guild = interaction.client.guilds.cache.find(v => v.id == interaction.options.getString('guildid'));
+    const guild = interaction.client.guilds.cache.find(v => v.id === interaction.options.getString('guildid'));
     interaction.reply({ content: guild instanceof Guild ? '`✅` 参加しています' : '`❌` 参加していません', ephemeral: true });
   },
 );
