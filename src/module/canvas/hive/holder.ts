@@ -1,7 +1,7 @@
-import { CardRow } from "../index";
-import { PlaceHolder } from "../../format";
-import { Hive } from "../../../types/responses";
-import { CardTextStyle, Colors } from "../../constant";
+import { CardRow } from '../index';
+import { PlaceHolder } from '../../format';
+import { Hive } from '../../../types/responses';
+import { CardTextStyle, Colors } from '../../constant';
 
 export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	build: [
@@ -14,7 +14,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
@@ -26,8 +26,8 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
 	],
 	ctf: [
 		{
@@ -40,7 +40,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
@@ -52,8 +52,8 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
 	],
 	dr: [
 		{
@@ -65,7 +65,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
@@ -75,8 +75,8 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
 	],
 	drop: [
 		{
@@ -89,7 +89,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
@@ -100,8 +100,8 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
 	],
 	ground: [
 		{
@@ -110,23 +110,24 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
 				{ title: '勝率', data: '![victoryRate]' },
-				{ title: 'ブロック設置数', data: '![blocks_placed]', color: Colors.pink },
+				{ title: '設置数', data: '![blocks_placed]', color: Colors.pink },
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
 			fields: [
+				{ title: 'キル数', data: '![deaths]' },
 				{ title: 'デス数', data: '![deaths]' },
-				{ title: '卵を投げた数', data: '![projectiles_fired]' },
-				{ title: 'ブロック破壊数', data: '![blocks_destroyed]', color: Colors.pink },
+				{ title: '投げた数', data: '![projectiles_fired]' },
+				{ title: '破壊数', data: '![blocks_destroyed]', color: Colors.pink },
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
 	],
 	hide: [
 		{
@@ -138,7 +139,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
@@ -149,8 +150,8 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
 	],
 	murder: [
 		{
@@ -163,7 +164,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
@@ -175,8 +176,8 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
 	],
 	party: [
 		{
@@ -188,7 +189,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
@@ -198,8 +199,8 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.pink,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
 	],
 	sg: [
 		{
@@ -212,7 +213,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
@@ -223,8 +224,8 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
 	],
 	sky: [
 		{
@@ -237,7 +238,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
@@ -248,8 +249,8 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
 	],
 	wars: [
 		{
@@ -262,7 +263,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
+			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
 			height: 500,
@@ -274,10 +275,10 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
-			dataOption: { font: CardTextStyle.statsValue }
-		}
-	]
-}
+			dataOption: { font: CardTextStyle.statsValue },
+		},
+	],
+};
 
 const rate = (win?: number, play?: number) => (win || 0) / (play || 1);
 

@@ -1,15 +1,15 @@
-import { Button, ChatInput, SelectMenu, SelectMenuType } from "@akki256/discord-interaction";
-import { ActionRow, ActionRowBuilder, ApplicationCommandOptionType, AttachmentBuilder, ButtonBuilder, ButtonStyle, Colors, ComponentType, EmbedBuilder, MessageActionRowComponent, PermissionFlagsBits, resolveColor, StringSelectMenuBuilder } from "discord.js";
-import { createHiveCard, games, timeframe } from "../../module/canvas/hive";
-import { Emojis } from "../../module/constant";
-import { Gamertag } from "../../module/validate";
-import MinecraftIDs from "../../schemas/MinecraftIDs";
-import { Hive } from "../../types/responses";
+import { Button, ChatInput, SelectMenu, SelectMenuType } from '@akki256/discord-interaction';
+import { ActionRow, ActionRowBuilder, ApplicationCommandOptionType, AttachmentBuilder, ButtonBuilder, ButtonStyle, Colors, ComponentType, EmbedBuilder, MessageActionRowComponent, PermissionFlagsBits, resolveColor, StringSelectMenuBuilder } from 'discord.js';
+import { createHiveCard, games, timeframe } from '../../module/canvas/hive';
+import { Emojis } from '../../module/constant';
+import { Gamertag } from '../../module/validate';
+import MinecraftIDs from '../../schemas/MinecraftIDs';
+import { Hive } from '../../types/responses';
 
 const publicCoolDown = new Set();
 const timeframeName: Record<timeframe, string> = {
 	all: '全ての期間',
-	month: '月間'
+	month: '月間',
 };
 const hive = new ChatInput(
 	{
@@ -43,7 +43,7 @@ const hive = new ChatInput(
 				],
 				type: ApplicationCommandOptionType.Subcommand,
 			},
-		]
+		],
 	},
 	{ coolTime: 15_000 },
 	async (interaction) => {
@@ -59,7 +59,7 @@ const hive = new ChatInput(
 				return interaction.followUp({ content: '`❌` 無効なゲーマータグが入力されました。', ephemeral: true });
 
 			const game = interaction.options.getString('game', true) as keyof Hive.Games;
-			const frame = (interaction.options.getString('timeframe') || 'all') as timeframe
+			const frame = (interaction.options.getString('timeframe') || 'all') as timeframe;
 
 			const buffer = await createHiveCard(game, frame, gamertag).catch(error => {
 				interaction.followUp({
@@ -72,18 +72,18 @@ const hive = new ChatInput(
 
 			interaction.followUp({
 				files: [
-					new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` })
+					new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` }),
 				],
 				components: createComponents(game, frame, gamertag),
 			});
 		}
-	}
+	},
 );
 
 const gameSelect = new SelectMenu(
 	{
 		customId: 'nonick-stats:hive-stats-game',
-		type: SelectMenuType.String
+		type: SelectMenuType.String,
 	},
 	async (interaction) => {
 		const game = interaction.values[0] as keyof Hive.Games;
@@ -100,7 +100,7 @@ const gameSelect = new SelectMenu(
 					.setColor(Colors.Green),
 			],
 			files: [],
-			components: createComponents(game, frame, gamertag, 'all')
+			components: createComponents(game, frame, gamertag, 'all'),
 		});
 
 		const buffer = await createHiveCard(game, frame, gamertag).catch(error => {
@@ -115,17 +115,17 @@ const gameSelect = new SelectMenu(
 		interaction.editReply({
 			embeds: [],
 			files: [
-				new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` })
+				new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` }),
 			],
 			components: createComponents(game, frame, gamertag),
 		});
-	}
+	},
 );
 
 const timeframeSelect = new SelectMenu(
 	{
 		customId: 'nonick-stats:hive-stats-timeframe',
-		type: SelectMenuType.String
+		type: SelectMenuType.String,
 	},
 	async (interaction) => {
 		const game = getSelectData(interaction.message.components, 'nonick-stats:hive-stats-game')[0] as keyof Hive.Games;
@@ -142,7 +142,7 @@ const timeframeSelect = new SelectMenu(
 					.setColor(Colors.Green),
 			],
 			files: [],
-			components: createComponents(game, frame, gamertag, 'all')
+			components: createComponents(game, frame, gamertag, 'all'),
 		});
 
 		const buffer = await createHiveCard(game, frame, gamertag).catch(error => {
@@ -157,17 +157,15 @@ const timeframeSelect = new SelectMenu(
 		interaction.editReply({
 			embeds: [],
 			files: [
-				new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` })
+				new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` }),
 			],
 			components: createComponents(game, frame, gamertag),
 		});
-	}
+	},
 );
 
 const publishButton = new Button(
-	{
-		customId: /nonick-stats:public-.*/
-	},
+	{ customId: /nonick-stats:public-.*/ },
 	(interaction) => {
 		if (!interaction.inCachedGuild() || !interaction.channel || !interaction.guild.members.me) return;
 		if (publicCoolDown.has(interaction.user.id))
@@ -198,16 +196,16 @@ const publishButton = new Button(
 					embeds: [
 						new EmbedBuilder()
 							.setTitle('`✅` 公開しました')
-							.setColor(Colors.Green)
+							.setColor(Colors.Green),
 					],
 					components: [],
-					files: []
+					files: [],
 				});
 				publicCoolDown.add(interaction.user.id);
 				setTimeout(() => publicCoolDown.delete(interaction.user.id), 30_000);
 			})
 			.catch(() => interaction.reply({ content: '`❌` 画像の送信に失敗しました', ephemeral: true }));
-	}
+	},
 );
 
 function createComponents(game: keyof Hive.Games, timeframe: timeframe, gamertag: string, disabled?: 'button' | 'all') {
@@ -216,13 +214,13 @@ function createComponents(game: keyof Hive.Games, timeframe: timeframe, gamertag
 			new StringSelectMenuBuilder()
 				.setCustomId('nonick-stats:hive-stats-game')
 				.setOptions(Object.entries(games).map(([value, label]) => ({ label, value, emoji: Emojis.hive[value as keyof Hive.Games], default: value === game })))
-				.setDisabled(disabled === 'all')
+				.setDisabled(disabled === 'all'),
 		),
 		new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
 			new StringSelectMenuBuilder()
 				.setCustomId('nonick-stats:hive-stats-timeframe')
 				.setOptions(Object.entries(timeframeName).map(([value, label]) => ({ label, value, default: value === timeframe })))
-				.setDisabled(disabled === 'all')
+				.setDisabled(disabled === 'all'),
 		),
 		new ActionRowBuilder<ButtonBuilder>().setComponents(
 			new ButtonBuilder()
@@ -230,8 +228,8 @@ function createComponents(game: keyof Hive.Games, timeframe: timeframe, gamertag
 				.setLabel('公開')
 				.setStyle(ButtonStyle.Success)
 				.setEmoji('1073880855644225637')
-				.setDisabled(typeof disabled === 'string')
-		)
+				.setDisabled(typeof disabled === 'string'),
+		),
 	];
 }
 
