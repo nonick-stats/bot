@@ -71,6 +71,7 @@ export namespace Hive {
     blocks_destroyed: number,
     blocks_placed: number,
     deaths: number,
+    kills: number,
     projectiles_fired: number,
   }
 
@@ -112,6 +113,5 @@ export namespace Hive {
     GroundWars,
     JustBuild,
     BlockParty {
-
   }
 }

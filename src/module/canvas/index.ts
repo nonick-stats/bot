@@ -13,7 +13,7 @@ export async function createCard(bg: string | Image, ...rows: CardRow[]) {
 	const background = bg instanceof Image ? bg : await loadImage(bg);
 	ctx.drawImage(background, 0, 0, canvasWidth, canvasHeight);
 
-	//#region defaultOption
+	// #region defaultOption
 	ctx.shadowBlur = 2;
 	ctx.shadowColor = '#000000';
 	ctx.shadowOffsetX = 5;
@@ -21,14 +21,14 @@ export async function createCard(bg: string | Image, ...rows: CardRow[]) {
 	ctx.textAlign = 'center';
 	ctx.font = '50px PixelMPlus';
 	ctx.fillStyle = '#FFFFFF';
-	//#endregion
+	// #endregion
 
 	for (const row of rows) {
 		const length = row.fields.length;
 		for (const [index, field] of row.fields.entries()) {
 			const width = canvasWidth * ((index + 1) / (length + 1));
 
-			//#region title
+			// #region title
 			ctx.save();
 
 			const titleOption = getOption('title', field, row);
@@ -39,9 +39,9 @@ export async function createCard(bg: string | Image, ...rows: CardRow[]) {
 			ctx.fillText(title, width, row.height);
 
 			ctx.restore();
-			//#endregion
+			// #endregion
 
-			//#region data
+			// #region data
 			if (field.data) {
 				ctx.save();
 
@@ -54,16 +54,16 @@ export async function createCard(bg: string | Image, ...rows: CardRow[]) {
 
 				ctx.restore();
 			}
-			//#endregion
+			// #endregion
 		}
 	}
 
-	//#region footer
+	// #region footer
 	ctx.fillStyle = '#AAAAAA';
 	ctx.textAlign = 'left';
 	ctx.font = '30px Minecraft';
 	ctx.fillText('NoNICK.stats', 10, canvasHeight - 10);
-	//#endregion
+	// #endregion
 
 	return canvas.toBuffer('image/jpeg');
 }
