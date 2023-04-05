@@ -34,11 +34,11 @@ export async function createHiveCard<T extends keyof Hive.Games>(game: T, timefr
 		return createCard(`src/images/hive/stats/${game}.png`,
 			{
 				height: 125,
-				fields: [{ title: gamertag, font: '110px MinecraftTen', color: '#55FF55' }],
+				fields: [{ title: gamertag, font: '110px mcTen', color: '#55FF55' }],
 			},
 			{
 				height: 200,
-				fields: [{ title: `The Hive - ${games[game]}`, font: '40px Minecraft' }],
+				fields: [{ title: `The Hive - ${games[game]}`, font: '40px mc' }],
 			},
 			...holder.parse(templates[game], data),
 			{

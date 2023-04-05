@@ -29,5 +29,5 @@ export const Colors = {
 
 export const CardTextStyle = {
   statsName: '50px PixelMPlus',
-  statsValue: '65px Minecraft',
+  statsValue: '65px mc',
 } as const;

@@ -1,6 +1,6 @@
 import { GlobalFonts, createCanvas, Image, loadImage } from '@napi-rs/canvas';
-GlobalFonts.registerFromPath('src/fonts/minecraft.ttf', 'Minecraft');
-GlobalFonts.registerFromPath('src/fonts/minecraftTen.ttf', 'MinecraftTen');
+GlobalFonts.registerFromPath('src/fonts/minecraft.ttf', 'mc');
+GlobalFonts.registerFromPath('src/fonts/minecraftTen.ttf', 'mcTen');
 GlobalFonts.registerFromPath('src/fonts/pixelMplus12-Regular.ttf', 'PixelMPlus');
 
 export const canvasWidth = 1280;
@@ -26,7 +26,8 @@ export async function createCard(bg: string | Image, ...rows: CardRow[]) {
 	for (const row of rows) {
 		const length = row.fields.length;
 		for (const [index, field] of row.fields.entries()) {
-			const width = canvasWidth * ((index + 1) / (length + 1));
+			const x = canvasWidth * ((index + 1) / (length + 1));
+			const width = canvasWidth / (length + 1);
 
 			// #region title
 			ctx.save();
@@ -36,7 +37,7 @@ export async function createCard(bg: string | Image, ...rows: CardRow[]) {
 			if (titleOption.font) ctx.font = titleOption.font;
 
 			const title = typeof field.title === 'string' ? field.title : field.title.text;
-			ctx.fillText(title, width, row.height);
+			ctx.fillText(title, x, row.height, width);
 
 			ctx.restore();
 			// #endregion
@@ -50,7 +51,7 @@ export async function createCard(bg: string | Image, ...rows: CardRow[]) {
 				if (dataOption.font) ctx.font = dataOption.font;
 
 				const data = typeof field.data === 'string' ? field.data : field.data.text;
-				ctx.fillText(data, width, row.height + 100);
+				ctx.fillText(data, x, row.height + 100, width);
 
 				ctx.restore();
 			}
@@ -61,7 +62,7 @@ export async function createCard(bg: string | Image, ...rows: CardRow[]) {
 	// #region footer
 	ctx.fillStyle = '#AAAAAA';
 	ctx.textAlign = 'left';
-	ctx.font = '30px Minecraft';
+	ctx.font = '30px mc';
 	ctx.fillText('NoNICK.stats', 10, canvasHeight - 10);
 	// #endregion
 
