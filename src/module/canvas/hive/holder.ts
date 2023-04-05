@@ -119,7 +119,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 		{
 			height: 500,
 			fields: [
-				{ title: 'キル数', data: '![deaths]' },
+				{ title: 'キル数', data: '![kills]' },
 				{ title: 'デス数', data: '![deaths]' },
 				{ title: '投げた数', data: '![projectiles_fired]' },
 				{ title: '破壊数', data: '![blocks_destroyed]', color: Colors.pink },
