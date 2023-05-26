@@ -50,7 +50,7 @@ const hive = new ChatInput(
 		const subcommand = interaction.options.getSubcommand();
 
 		if (subcommand === 'stats') {
-			interaction.deferReply({ ephemeral: true });
+			await interaction.deferReply({ ephemeral: true });
 			const gamertag = interaction.options.getString('gamertag') ?? (await MinecraftIDs.findOne({ userId: interaction.user.id }))?.be;
 
 			if (!gamertag)
