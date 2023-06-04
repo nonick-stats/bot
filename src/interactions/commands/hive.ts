@@ -92,7 +92,7 @@ const gameSelect = new SelectMenu(
 
 		if (!(gamertag && frame)) return;
 
-		interaction.update({
+		await interaction.update({
 			embeds: [
 				new EmbedBuilder()
 					.setTitle('`📷` 画像を作成中...')
@@ -134,7 +134,7 @@ const timeframeSelect = new SelectMenu(
 
 		if (!(gamertag && frame)) return;
 
-		interaction.update({
+		await interaction.update({
 			embeds: [
 				new EmbedBuilder()
 					.setTitle('`📷` 画像を作成中...')
