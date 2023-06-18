@@ -87,6 +87,18 @@ export namespace Hive {
     rounds_survived: number,
   }
 
+  interface TheBridge extends Omit<BaseStats, 'victories' | 'played'> {
+    m_solo_goals?: number,
+    m_solo_kills?: number,
+    m_solo_played?: number,
+    m_solo_victories?: number,
+    played?: number,
+    victories?: number,
+    deaths?: number,
+    goals?: number,
+    kills?: number,
+  }
+
   interface Games {
     wars: TreasureWars;
     dr: DeathRun;
@@ -99,6 +111,7 @@ export namespace Hive {
     ground: GroundWars;
     build: JustBuild;
     party: BlockParty;
+    bridge: TheBridge;
   }
 
   interface AllGameStats extends
@@ -112,6 +125,7 @@ export namespace Hive {
     BlockDrop,
     GroundWars,
     JustBuild,
-    BlockParty {
+    BlockParty,
+    TheBridge {
   }
 }
