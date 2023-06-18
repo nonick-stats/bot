@@ -22,7 +22,7 @@ const infoCommand = new ChatInput(
           .setColor(Colors.White)
           .setImage('https://cdn.discordapp.com/attachments/958791423161954445/1059392131644543066/bg.png')
           .setFields({ name: '対応サーバー', value: supportServers.map(v => inlineCode(v)).join(' ') })
-          .setFooter({ text: '開発者・nonick-mc#1017', iconURL: 'https://media.discordapp.net/attachments/958791423161954445/975266759529623652/-3.png' }),
+          .setFooter({ text: '開発者・@nonick_mc、@akki0256', iconURL: 'https://media.discordapp.net/attachments/958791423161954445/975266759529623652/-3.png' }),
       ],
       components: [
         new ActionRowBuilder<ButtonBuilder>().setComponents(

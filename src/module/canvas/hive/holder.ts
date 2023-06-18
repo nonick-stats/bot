@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { CardRow } from '../index';
 import { PlaceHolder } from '../../format';
 import { Hive } from '../../../types/responses';
@@ -278,10 +279,37 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 	],
+	bridge: [
+		{
+			height: 300,
+			fields: [
+				{ title: 'プレイ数', data: '![bridge_played]' },
+				{ title: '勝利数', data: '![bridge_victories]' },
+				{ title: '勝率', data: '![victoryRate]' },
+			],
+			color: Colors.red,
+			titleOption: { font: CardTextStyle.statsName },
+			dataOption: { font: CardTextStyle.statsValue },
+		},
+		{
+			height: 500,
+			fields: [
+				{ title: 'キル数', data: '![bridge_kills]' },
+				{ title: 'ポイント数', data: '![bridge_goals]' },
+			],
+			color: Colors.yellow,
+			titleOption: { font: CardTextStyle.statsName },
+			dataOption: { font: CardTextStyle.statsValue },
+		},
+	],
 };
 
 const rate = (win?: number, play?: number) => (win || 0) / (play || 1);
 
 export const holder = new PlaceHolder<Hive.AllGameStats>()
-	.register('victoryRate', ({ played, victories }) => `${Math.round(rate(victories, played) * 100)} %`)
-	.register('killRate', ({ deaths, kills, murders }) => rate(kills || murders, deaths).toFixed(2));
+	.register('victoryRate', ({ played, m_solo_played, victories, m_solo_victories }) => `${Math.round(rate(victories || m_solo_victories, played || m_solo_played) * 100)} %`)
+	.register('killRate', ({ deaths, kills, murders }) => rate(kills || murders, deaths).toFixed(2))
+	.register('bridge_played', ({ m_solo_played, played }) => (m_solo_played || played || '0'))
+	.register('bridge_victories', ({ m_solo_victories, victories }) => (m_solo_victories || victories || '0'))
+	.register('bridge_goals', ({ m_solo_goals, goals }) => (m_solo_goals || goals || '0'))
+	.register('bridge_kills', ({ m_solo_kills, kills }) => (m_solo_kills || kills || '0'));
