@@ -302,6 +302,30 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 	],
+	grav: [
+		{
+			height: 300,
+			fields: [
+				{ title: 'プレイ数', data: '![played]' },
+				{ title: '勝利数', data: '![victories]' },
+				{ title: '勝率', data: '![victoryRate]' },
+			],
+			color: Colors.red,
+			titleOption: { font: CardTextStyle.statsName },
+			dataOption: { font: CardTextStyle.statsValue },
+		},
+		{
+			height: 500,
+			fields: [
+				{ title: 'デス数', data: '![deaths]' },
+				{ title: 'ゴール数', data: '![maps_completed]' },
+				{ title: '一発ゴール数', data: '![maps_completed_without_dying]' },
+			],
+			color: Colors.yellow,
+			titleOption: { font: CardTextStyle.statsName },
+			dataOption: { font: CardTextStyle.statsValue },
+		},
+	]
 };
 
 const rate = (win?: number, play?: number) => (win || 0) / (play || 1);

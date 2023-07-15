@@ -16,6 +16,7 @@ export const games: Record<keyof Hive.Games, string> = {
 	build: 'Just Build',
 	party: 'BlockParty',
 	bridge: 'TheBridge (Solo)',
+	grav: 'Gravity',
 };
 
 const xpData: Record<keyof Hive.Games, { inc: number, cap: number | null }> = {
@@ -31,6 +32,7 @@ const xpData: Record<keyof Hive.Games, { inc: number, cap: number | null }> = {
 	ground: { inc: 150, cap: null },
 	party: { inc: 150, cap: null },
 	bridge: { inc: 300, cap: null },
+	grav: { inc: 150, cap: null },
 };
 
 const endpoints = {
@@ -47,20 +49,20 @@ export async function createHiveCard<T extends keyof Hive.Games>(game: T, timefr
 		Object.keys(data).map(key => {
 			if (!holder.has(key)) holder.register(key, data => String(data[key as keyof Hive.AllGameStats] || 0));
 		});
-		// const { lv, progress } = getLevel(game, data.xp);
+		const { lv, progress } = getLevel(game, data.xp);
 		return createCard(`src/images/hive/stats/${game}.png`,
 			{
 				height: 125,
 				fields: [{ title: gamertag, font: '110px mcTen', color: '#55FF55' }],
 			},
 			{
-				height: 200,
+				height: 175,
 				fields: [{ title: `The Hive - ${games[game]}`, font: '40px mc' }],
 			},
-			// {
-			// 	height: 225,
-			// 	fields: [{ title: `${'prestige' in data && data.prestige ? `P${data.prestige} ` : ''}Lv.${lv} (${Math.floor(progress * 100)}%)`, font: '40px mc' }],
-			// },
+			{
+				height: 225,
+				fields: [{ title: `${'prestige' in data && data.prestige ? `P${data.prestige} ` : ''}Lv.${lv} (${Math.floor(progress * 100)}%)`, font: '40px mc' }],
+			},
 			...holder.parse(templates[game], data),
 			{
 				height: canvasHeight - 40,

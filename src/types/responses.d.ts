@@ -99,6 +99,12 @@ export namespace Hive {
     kills?: number,
   }
 
+  interface Gravity extends BaseStats {
+    deaths: number;
+    maps_completed: number;
+    maps_completed_without_dying: number;
+  }
+
   interface Games {
     wars: TreasureWars;
     dr: DeathRun;
@@ -112,6 +118,7 @@ export namespace Hive {
     build: JustBuild;
     party: BlockParty;
     bridge: TheBridge;
+    grav: Gravity;
   }
 
   interface AllGameStats extends
