@@ -10,7 +10,7 @@ import { guildId } from '../config.json';
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const interactions = new DiscordInteractions(client);
-interactions.loadInteractions(path.resolve(__dirname, './interactions'));
+interactions.loadRegistries(path.resolve(__dirname, './interactions'));
 
 client.once(Events.ClientReady, (): void => {
   console.log('[INFO] BOT ready!');
