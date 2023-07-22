@@ -66,7 +66,7 @@ export async function createCard(bg: string | Image, ...rows: CardRow[]) {
 	ctx.fillText('NoNICK.stats', 10, canvasHeight - 10);
 	// #endregion
 
-	return canvas.toBuffer('image/jpeg');
+	return canvas.toBuffer('image/png');
 }
 
 function getOption(key: Exclude<keyof CardField, keyof CardOption>, field: CardField, row: CardRow) {

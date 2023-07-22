@@ -72,7 +72,7 @@ const hive = new ChatInput(
 
 			interaction.followUp({
 				files: [
-					new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` }),
+					new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.png` }),
 				],
 				components: createComponents(game, frame, gamertag),
 			});

@@ -61,7 +61,7 @@ export async function createHiveCard<T extends keyof Hive.Games>(game: T, timefr
 			},
 			{
 				height: 225,
-				fields: [{ title: `${'prestige' in data && data.prestige ? `P${data.prestige} ` : ''}Lv.${lv} (${Math.floor(progress * 100)}%)`, font: '40px mc' }],
+				fields: [{ title: !data.human_index ? (`${'prestige' in data && data.prestige ? `P${data.prestige} ` : ''}Lv.${lv} (${Math.floor(progress * 100)}%)`) : '', font: '40px mc' }],
 			},
 			...holder.parse(templates[game], data),
 			{
