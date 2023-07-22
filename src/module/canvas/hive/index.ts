@@ -43,13 +43,14 @@ const endpoints = {
 export type timeframe = keyof typeof endpoints;
 
 export async function createHiveCard<T extends keyof Hive.Games>(game: T, timeframe: timeframe, gamertag: string) {
-	return await axios.get<Hive.Games[T]>(`${endpoints[timeframe]}/${game}/${gamertag}`, { timeout: 10_000 }).then(({ data }) => {
+	return await axios.get<Hive.Games[T]>(`${endpoints[timeframe]}/${game}/${gamertag}`, { timeout: 10_000 }).then(async ({ data }) => {
 		if (!data) throw new Error('`❌` 予期しないエラーが発生しました。\n(APIサーバーが落ちている可能性があります)');
 
 		Object.keys(data).map(key => {
 			if (!holder.has(key)) holder.register(key, data => String(data[key as keyof Hive.AllGameStats] || 0));
 		});
-		const { lv, progress } = getLevel(game, data.xp);
+		const { data: { xp } } = await axios.get<Hive.Games[T]>(`${endpoints['all']}/${game}/${gamertag}`, { timeout: 10_000 });
+		const { lv, progress } = getLevel(game, xp);
 		return createCard(`src/images/hive/stats/${game}.png`,
 			{
 				height: 125,
