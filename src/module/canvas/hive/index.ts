@@ -47,9 +47,9 @@ export async function createHiveCard<T extends keyof Hive.Games>(game: T, timefr
 		if (!data) throw new Error('`❌` 予期しないエラーが発生しました。\n(APIサーバーが落ちている可能性があります)');
 
 		Object.keys(data).map(key => {
-			if (!holder.has(key)) holder.register(key, data => String(data[key as keyof Hive.AllGameStats] || 0));
+			if (!holder.has(key)) holder.register(key, v => String(v[key as keyof Hive.AllGameStats] || 0));
 		});
-		const { data: allData } = await axios.get<Hive.Games[T]>(`${endpoints['all']}/${game}/${gamertag}`, { timeout: 10_000 });
+		const { data: allData } = timeframe === 'all' ? { data } : await axios.get<Hive.Games[T]>(`${endpoints['all']}/${game}/${gamertag}`, { timeout: 10_000 });
 		const { lv, xp, need, max } = getLevel(game, allData.xp);
 		return createCard(`src/images/hive/stats/${game}.png`,
 			{
@@ -61,14 +61,14 @@ export async function createHiveCard<T extends keyof Hive.Games>(game: T, timefr
 				fields: [{ title: `The Hive - ${games[game]}`, font: '40px mc' }],
 			},
 			{
-				height: 225,
-				fields: [{ title: `${'prestige' in data && data.prestige ? `P${data.prestige} ` : ''}Lv.${lv} ${max ? '最大レベル' : `${xp} / ${need} (${Math.floor((xp / need) * 100)}%)`}`, font: '25px PixelMPlus' }],
+				height: 235,
+				fields: [{ title: `${'prestige' in data && data.prestige ? `P${data.prestige} ` : ''}Lv.${lv} ${max ? '最大レベル' : `${xp} / ${need} (${Math.floor((xp / need) * 100)}%)`}`, font: '35px mc', color: '#ccc' }],
 			},
 			...holder.parse(templates[game], data),
 			{
 				height: canvasHeight - 40,
 				fields: [{ title: `タイムフレーム: ${data.human_index ? `月間 (${data.human_index}位)` : 'すべての期間'}` }],
-				font: '40px PixelMPlus',
+				font: '30px PixelMPlus',
 			},
 		);
 	}).catch(({ response }) => {
