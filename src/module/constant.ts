@@ -29,6 +29,6 @@ export const Colors = {
 } as const;
 
 export const CardTextStyle = {
-  statsName: '45px PixelMPlus',
-  statsValue: '60px mc',
+  statsName: '35px PixelMPlus',
+  statsValue: '50px mc',
 } as const;

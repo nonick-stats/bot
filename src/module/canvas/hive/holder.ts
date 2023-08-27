@@ -7,7 +7,7 @@ import { CardTextStyle, Colors } from '../../constant';
 export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	build: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: 'ランクイン数', data: '![victories]' },
@@ -18,7 +18,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: 'イマイチ', data: '![rating_good_received]' },
 				{ title: 'OK', data: '![rating_love_received]' },
@@ -32,7 +32,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	ctf: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
@@ -44,7 +44,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: 'キル数', data: '![kills]' },
 				{ title: 'アシスト数', data: '![assists]' },
@@ -58,7 +58,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	dr: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: 'ゴール数', data: '![victories]' },
@@ -69,7 +69,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: '通過したチェックポイント', data: '![checkpoints]' },
 				{ title: 'キル数', data: '![kills]' },
@@ -81,7 +81,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	drop: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
@@ -93,7 +93,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: 'デス数', data: '![deaths]' },
 				{ title: 'ブロック破壊数', data: '![blocks_destroyed]' },
@@ -106,23 +106,32 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	ground: [
 		{
-			height: 325,
+			height: 285,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
 				{ title: '勝率', data: '![victoryRate]' },
-				{ title: '設置数', data: '![blocks_placed]', color: Colors.pink },
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 425,
 			fields: [
 				{ title: 'キル数', data: '![kills]' },
 				{ title: 'デス数', data: '![deaths]' },
+				{ title: 'K/D率', data: '![killRate]' },
+			],
+			color: Colors.yellow,
+			titleOption: { font: CardTextStyle.statsName },
+			dataOption: { font: CardTextStyle.statsValue },
+		},
+		{
+			height: 565,
+			fields: [
 				{ title: '投げた数', data: '![projectiles_fired]' },
+				{ title: '設置数', data: '![blocks_placed]', color: Colors.pink },
 				{ title: '破壊数', data: '![blocks_destroyed]', color: Colors.pink },
 			],
 			color: Colors.yellow,
@@ -132,7 +141,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	hide: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
@@ -143,7 +152,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: '隠れ側キル数', data: '![hider_kills]' },
 				{ title: '鬼側キル数', data: '![seeker_kills]' },
@@ -156,7 +165,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	murder: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
@@ -168,7 +177,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: 'キル数', data: '![murders]' },
 				{ title: 'デス数', data: '![deaths]' },
@@ -182,7 +191,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	party: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
@@ -193,7 +202,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: 'アイテム獲得数', data: '![powerups_collected]' },
 				{ title: 'ラウンドクリア数', data: '![rounds_survived]' },
@@ -205,7 +214,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	sg: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
@@ -217,7 +226,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: 'キル数', data: '![kills]' },
 				{ title: 'デスマッチ到達数', data: '![deathmatches]' },
@@ -230,7 +239,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	sky: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
@@ -242,7 +251,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: 'キル数', data: '![kills]' },
 				{ title: '開けたMysteryChest', data: '![mystery_chests_destroyed]' },
@@ -255,7 +264,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	wars: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
@@ -267,7 +276,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: 'キル数', data: '![kills]' },
 				{ title: 'ﾌｧｲﾅﾙｷﾙ数', data: '![final_kills]' },
@@ -281,7 +290,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	bridge: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![bridge_played]' },
 				{ title: '勝利数', data: '![bridge_victories]' },
@@ -292,7 +301,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: 'キル数', data: '![bridge_kills]' },
 				{ title: 'ポイント数', data: '![bridge_goals]' },
@@ -304,7 +313,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	grav: [
 		{
-			height: 325,
+			height: 315,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
@@ -315,7 +324,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 500,
+			height: 535,
 			fields: [
 				{ title: 'デス数', data: '![deaths]' },
 				{ title: 'ゴール数', data: '![maps_completed]' },

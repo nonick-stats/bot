@@ -53,16 +53,16 @@ export async function createHiveCard<T extends keyof Hive.Games>(game: T, timefr
 		const { lv, xp, need, max } = getLevel(game, allData.xp);
 		return createCard(`src/images/hive/stats/${game}.png`,
 			{
-				height: 125,
-				fields: [{ title: gamertag, font: '110px mcTen', color: '#55FF55' }],
+				height: 95,
+				fields: [{ title: gamertag, font: '90px mcTen', color: '#55FF55' }],
 			},
 			{
-				height: 175,
-				fields: [{ title: `The Hive - ${games[game]}`, font: '40px mc' }],
+				height: 145,
+				fields: [{ title: `The Hive - ${games[game]}`, font: '35px mc' }],
 			},
 			{
-				height: 235,
-				fields: [{ title: `${'prestige' in data && data.prestige ? `P${data.prestige} ` : ''}Lv.${lv} ${max ? '最大レベル' : `${xp} / ${need} (${Math.floor((xp / need) * 100)}%)`}`, font: '35px mc', color: '#ccc' }],
+				height: 205,
+				fields: [{ title: `${'prestige' in allData && allData.prestige ? `P${allData.prestige}  ` : ''}Lv.${lv}  ${max ? 'MAX' : `  ${xp} / ${need} (${Math.floor((xp / need) * 100)}%)`}`, font: '35px mc', color: '#ccc' }],
 			},
 			...holder.parse(templates[game], data),
 			{

@@ -51,7 +51,7 @@ export async function createCard(bg: string | Image, ...rows: CardRow[]) {
 				if (dataOption.font) ctx.font = dataOption.font;
 
 				const data = typeof field.data === 'string' ? field.data : field.data.text;
-				ctx.fillText(data, x, row.height + 80, width);
+				ctx.fillText(data, x, row.height + 60, width);
 
 				ctx.restore();
 			}
