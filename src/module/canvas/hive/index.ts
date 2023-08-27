@@ -22,7 +22,7 @@ export const games: Record<keyof Hive.Games, string> = {
 const xpData: Record<keyof Hive.Games, { inc: number, cap: number | null, max: number }> = {
 	wars: { inc: 150, cap: 52, max: 100 },
 	dr: { inc: 200, cap: 42, max: 75 },
-	hide: { inc: 100, cap: null, max: 50 },
+	hide: { inc: 100, cap: null, max: 75 },
 	sg: { inc: 150, cap: null, max: 30 },
 	murder: { inc: 100, cap: 82, max: 100 },
 	sky: { inc: 150, cap: 52, max: 75 },

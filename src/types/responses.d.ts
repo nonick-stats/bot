@@ -105,7 +105,7 @@ export namespace Hive {
     maps_completed_without_dying: number;
   }
 
-  interface Games {
+  export interface Games {
     wars: TreasureWars;
     dr: DeathRun;
     hide: HideAndSeek;
@@ -121,7 +121,7 @@ export namespace Hive {
     grav: Gravity;
   }
 
-  interface AllGameStats extends
+  export interface AllGameStats extends
     TreasureWars,
     DeathRun,
     HideAndSeek,
