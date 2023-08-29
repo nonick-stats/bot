@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node build/src/index.js",
-    "dev": "nodemon --exec node --loader ts-node/esm src/index.ts",
+    "dev": "nodemon --inspect src/index.ts",
     "reset": "node --loader ts-node/esm src/resetCommands.ts",
     "build": "tsc -p ."
   },

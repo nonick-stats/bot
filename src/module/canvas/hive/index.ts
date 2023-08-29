@@ -19,20 +19,20 @@ export const games: Record<keyof Hive.Games, string> = {
 	grav: 'Gravity',
 };
 
-const xpData: Record<keyof Hive.Games, { inc: number, cap: number | null }> = {
-	wars: { inc: 150, cap: 52 },
-	dr: { inc: 200, cap: 42 },
-	hide: { inc: 100, cap: null },
-	sg: { inc: 150, cap: null },
-	murder: { inc: 100, cap: 82 },
-	sky: { inc: 150, cap: 52 },
-	ctf: { inc: 150, cap: null },
-	drop: { inc: 150, cap: 22 },
-	build: { inc: 100, cap: null },
-	ground: { inc: 150, cap: null },
-	party: { inc: 150, cap: null },
-	bridge: { inc: 300, cap: null },
-	grav: { inc: 150, cap: null },
+const xpData: Record<keyof Hive.Games, { inc: number, cap: number | null, max: number }> = {
+	wars: { inc: 150, cap: 52, max: 100 },
+	dr: { inc: 200, cap: 42, max: 75 },
+	hide: { inc: 100, cap: null, max: 75 },
+	sg: { inc: 150, cap: null, max: 30 },
+	murder: { inc: 100, cap: 82, max: 100 },
+	sky: { inc: 150, cap: 52, max: 75 },
+	ctf: { inc: 150, cap: null, max: 20 },
+	drop: { inc: 150, cap: 22, max: 25 },
+	build: { inc: 100, cap: null, max: 20 },
+	ground: { inc: 150, cap: null, max: 20 },
+	party: { inc: 150, cap: null, max: 25 },
+	bridge: { inc: 300, cap: null, max: 20 },
+	grav: { inc: 150, cap: null, max: 25 },
 };
 
 const endpoints = {
@@ -47,28 +47,28 @@ export async function createHiveCard<T extends keyof Hive.Games>(game: T, timefr
 		if (!data) throw new Error('`❌` 予期しないエラーが発生しました。\n(APIサーバーが落ちている可能性があります)');
 
 		Object.keys(data).map(key => {
-			if (!holder.has(key)) holder.register(key, data => String(data[key as keyof Hive.AllGameStats] || 0));
+			if (!holder.has(key)) holder.register(key, v => String(v[key as keyof Hive.AllGameStats] || 0));
 		});
-		const { data: { xp } } = await axios.get<Hive.Games[T]>(`${endpoints['all']}/${game}/${gamertag}`, { timeout: 10_000 });
-		const { lv, progress } = getLevel(game, xp);
+		const { data: allData } = timeframe === 'all' ? { data } : await axios.get<Hive.Games[T]>(`${endpoints['all']}/${game}/${gamertag}`, { timeout: 10_000 });
+		const { lv, xp, need, max } = getLevel(game, allData.xp);
 		return createCard(`src/images/hive/stats/${game}.png`,
 			{
-				height: 125,
-				fields: [{ title: gamertag, font: '110px mcTen', color: '#55FF55' }],
+				height: 95,
+				fields: [{ title: gamertag, font: '90px mcTen', color: '#55FF55' }],
 			},
 			{
-				height: 175,
-				fields: [{ title: `The Hive - ${games[game]}`, font: '40px mc' }],
+				height: 145,
+				fields: [{ title: `The Hive - ${games[game]}`, font: '35px mc' }],
 			},
 			{
-				height: 225,
-				fields: [{ title: !data.human_index ? (`${'prestige' in data && data.prestige ? `P${data.prestige} ` : ''}Lv.${lv} (${Math.floor(progress * 100)}%)`) : '', font: '40px mc' }],
+				height: 205,
+				fields: [{ title: `${'prestige' in allData && allData.prestige ? `P${allData.prestige}  ` : ''}Lv.${lv}  ${max ? 'MAX' : `  ${xp} / ${need} (${Math.floor((xp / need) * 100)}%)`}`, font: '35px mc', color: '#ccc' }],
 			},
 			...holder.parse(templates[game], data),
 			{
 				height: canvasHeight - 40,
 				fields: [{ title: `タイムフレーム: ${data.human_index ? `月間 (${data.human_index}位)` : 'すべての期間'}` }],
-				font: '40px PixelMPlus',
+				font: '30px PixelMPlus',
 			},
 		);
 	}).catch(({ response }) => {
@@ -86,5 +86,5 @@ export function getLevel<T extends keyof Hive.Games>(game: T, xp: number) {
 		lv += 1;
 		if (!data.cap || lv < data.cap) need += data.inc;
 	}
-	return { lv, progress: xp / need };
+	return { lv, xp, need, max: data.max === lv };
 }
