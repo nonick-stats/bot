@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@akki256/discord-interaction": "^2.1.1",
+    "@akki256/discord-interaction": "^3.1.1",
     "@napi-rs/canvas": "^0.1.41",
     "axios": "^1.4.0",
     "discord.js": "^14.11.0",

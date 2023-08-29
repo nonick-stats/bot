@@ -1,13 +1,9 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@akki256/discord-interaction':
-    specifier: ^2.1.1
-    version: 2.1.1
+    specifier: ^3.1.1
+    version: 3.1.1
   '@napi-rs/canvas':
     specifier: ^0.1.41
     version: 0.1.41
@@ -49,8 +45,8 @@ devDependencies:
 
 packages:
 
-  /@akki256/discord-interaction@2.1.1:
-    resolution: {integrity: sha512-2UzhmbjdBjzGRDLbMCecgwvH3X6vkKtPcZbkxxvxkufdn+uGC5siDjJKfKx+XcraOhLmjc/aTIuH8+WEqdq9CQ==}
+  /@akki256/discord-interaction@3.1.1:
+    resolution: {integrity: sha512-1DRWFHj5NR2AEK7+CmkcH7EkwsyANYb2+r+9APuj7rmBbUtRmGkkN+LeBJ12Gl2wnM+DxyqZjnEqn+hjxF5UVw==}
     dependencies:
       discord.js: 14.11.0
     transitivePeerDependencies:
@@ -1889,3 +1885,7 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
