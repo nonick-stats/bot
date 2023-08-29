@@ -131,6 +131,7 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 			height: 565,
 			fields: [
 				{ title: '投げた数', data: '![projectiles_fired]' },
+				{ title: '的中率', data: '![hitsRate]' },
 				{ title: '設置数', data: '![blocks_placed]', color: Colors.pink },
 				{ title: '破壊数', data: '![blocks_destroyed]', color: Colors.pink },
 			],
@@ -342,6 +343,7 @@ const rate = (win?: number, play?: number) => (win || 0) / (play || 1);
 export const holder = new PlaceHolder<Hive.AllGameStats>()
 	.register('victoryRate', ({ played, m_solo_played, victories, m_solo_victories }) => `${Math.round(rate(victories || m_solo_victories, played || m_solo_played) * 100)} %`)
 	.register('killRate', ({ deaths, kills, murders }) => rate(kills || murders, deaths).toFixed(2))
+	.register('hitsRate', ({ projectiles_fired, kills }) => `${Math.round(rate(kills, projectiles_fired) * 100)} %`)
 	.register('bridge_played', ({ m_solo_played, played }) => (m_solo_played || played || '0'))
 	.register('bridge_victories', ({ m_solo_victories, victories }) => (m_solo_victories || victories || '0'))
 	.register('bridge_goals', ({ m_solo_goals, goals }) => (m_solo_goals || goals || '0'))
