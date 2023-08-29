@@ -28,11 +28,11 @@ const infoCommand = new ChatInput(
         new ActionRowBuilder<ButtonBuilder>().setComponents(
           new ButtonBuilder()
             .setLabel('サポートサーバー')
-            .setURL('https://discord.gg/fVcjCNn733')
+            .setURL('https://discord.gg/6YJFzppp3x')
             .setStyle(ButtonStyle.Link),
           new ButtonBuilder()
             .setLabel('ドキュメント')
-            .setURL('https://docs.nonick-js.com/')
+            .setURL('https://docs.nonick-stats.com/')
             .setStyle(ButtonStyle.Link),
         ),
       ],
