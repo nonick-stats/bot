@@ -92,7 +92,7 @@ export namespace Duration {
   });
 
   export function toMS(text: string) {
-    const match = text.replace(/\s+/g, '').match(RegExp(Object.entries(durations).reduce((p, [short, { long }]) => p + `((?<${short}>-?(\\d*\\.\\d+|\\d+))(${short}|${long}))?`, ''), 'i'));
+    const match = text.replace(/\s+/g, '').match(RegExp(Object.entries(durations).reduce((p, [short, { long }]) => p + `((?<${short}>-?(\\d*\\.\\d+|\\d+))(${short}|${long}))?`, '') + '$', 'i'));
     return Object.entries(match?.groups ?? {}).reduce((p, [key, value = 0]) => p + Number(value) * durations[key as List].time || 0, 0);
   }
 
