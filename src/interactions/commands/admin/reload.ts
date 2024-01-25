@@ -13,10 +13,15 @@ const reloadCommand = new ChatInput(
   async (interaction) => {
     // PM2環境化でのみ動作
 
-    if (!adminUser.includes(interaction.user.id)) return interaction.reply({
-      embeds: [new EmbedBuilder().setDescription('`❌` 権限がありません').setColor(Colors.Red)],
-      ephemeral: true,
-    });
+    if (!adminUser.includes(interaction.user.id))
+      return interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription('`❌` 権限がありません')
+            .setColor(Colors.Red),
+        ],
+        ephemeral: true,
+      });
 
     await interaction.reply({
       embeds: [
