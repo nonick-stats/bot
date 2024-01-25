@@ -1,5 +1,10 @@
 import fs from 'fs';
-import { ApplicationCommandOptionType, PermissionFlagsBits, EmbedBuilder, Colors } from 'discord.js';
+import {
+  ApplicationCommandOptionType,
+  PermissionFlagsBits,
+  EmbedBuilder,
+  Colors,
+} from 'discord.js';
 import { ChatInput } from '@akki256/discord-interaction';
 import { adminGuild, adminUser } from '../../../../config.json';
 
@@ -11,9 +16,7 @@ const maintenanceCommand = new ChatInput(
       {
         name: 'server',
         description: 'サーバー',
-        choices: [
-          { name: 'The HIVE', value: 'hive' },
-        ],
+        choices: [{ name: 'The HIVE', value: 'hive' }],
         type: ApplicationCommandOptionType.String,
         required: true,
       },

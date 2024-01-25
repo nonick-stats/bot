@@ -1,4 +1,10 @@
-import { PermissionFlagsBits, EmbedBuilder, Colors, ApplicationCommandOptionType, Guild } from 'discord.js';
+import {
+  PermissionFlagsBits,
+  EmbedBuilder,
+  Colors,
+  ApplicationCommandOptionType,
+  Guild,
+} from 'discord.js';
 import { ChatInput } from '@akki256/discord-interaction';
 import { adminGuild, adminUser } from '../../../../config.json';
 
@@ -19,13 +25,26 @@ const guildCheck = new ChatInput(
   },
   { guildId: adminGuild },
   async (interaction) => {
-    if (!adminUser.includes(interaction.user.id)) return interaction.reply({
-      embeds: [new EmbedBuilder().setDescription('`❌` 権限がありません').setColor(Colors.Red)],
+    if (!adminUser.includes(interaction.user.id))
+      return interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription('`❌` 権限がありません')
+            .setColor(Colors.Red),
+        ],
+        ephemeral: true,
+      });
+
+    const guild = interaction.client.guilds.cache.find(
+      (v) => v.id === interaction.options.getString('guildid'),
+    );
+    interaction.reply({
+      content:
+        guild instanceof Guild
+          ? '`✅` 参加しています'
+          : '`❌` 参加していません',
       ephemeral: true,
     });
-
-    const guild = interaction.client.guilds.cache.find(v => v.id === interaction.options.getString('guildid'));
-    interaction.reply({ content: guild instanceof Guild ? '`✅` 参加しています' : '`❌` 参加していません', ephemeral: true });
   },
 );
 

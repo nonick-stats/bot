@@ -28,11 +28,13 @@ const myidCommand = new ChatInput(
   },
   { coolTime: 30_000 },
   async (interaction) => {
-
     const bedrockId = interaction.options.getString('be', true);
 
     if (!Gamertag.Bedrock.test(bedrockId))
-      return interaction.reply({ content: '`❌` 利用できない文字が含まれています', ephemeral: true });
+      return interaction.reply({
+        content: '`❌` 利用できない文字が含まれています',
+        ephemeral: true,
+      });
 
     const UpdatedMCID = await MinecraftIDs.findOneAndUpdate(
       { userId: interaction.user.id },
@@ -43,17 +45,18 @@ const myidCommand = new ChatInput(
     interaction.reply({
       embeds: [
         new EmbedBuilder()
-          .setDescription([
-            `\`✅\` IDを\`${UpdatedMCID.be}\`に設定しました。`,
-            '`/hive stats`等ゲーマータグを入力するコマンドでゲーマタグを省略する事ができます。',
-          ].join('\n'))
+          .setDescription(
+            [
+              `\`✅\` IDを\`${UpdatedMCID.be}\`に設定しました。`,
+              '`/hive stats`等ゲーマータグを入力するコマンドでゲーマタグを省略する事ができます。',
+            ].join('\n'),
+          )
           .setColor(Colors.Green),
       ],
       ephemeral: true,
     });
 
     UpdatedMCID.save({ wtimeout: 1500 });
-
   },
 );
 

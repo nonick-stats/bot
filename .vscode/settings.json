@@ -1,10 +1,4 @@
 {
-  "cSpell.words": [
-    "Emojies",
-    "gamertag",
-    "mcid",
-    "myid",
-    "timeframe"
-  ],
-  "eslint.packageManager": "pnpm"
+  "cSpell.words": ["Emojies", "gamertag", "mcid", "myid", "timeframe"],
+  "editor.defaultFormatter": "biomejs.biome"
 }
