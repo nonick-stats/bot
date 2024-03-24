@@ -9,7 +9,6 @@ import {
   InteractionsError,
 } from '@akki256/discord-interaction';
 import mongoose, { version } from 'mongoose';
-import { guildId } from '../config.json';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -33,7 +32,7 @@ client.once(Events.ClientReady, (): void => {
     )}MB | ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)}MB`,
   });
 
-  interactions.registerCommands(guildId ?? undefined);
+  interactions.registerCommands({ guildId: process.env.GUILD_ID ?? undefined });
   reloadActivity();
 });
 
