@@ -1,7 +1,7 @@
 import { ChatInput } from '@akki256/discord-interaction';
 import { ApplicationCommandOptionType, Colors, EmbedBuilder } from 'discord.js';
-import MinecraftIDs from '../../../src/schemas/MinecraftIDs';
 import { Gamertag } from '../../module/validate';
+import MinecraftIDs from '../../schemas/MinecraftIDs';
 
 const myidCommand = new ChatInput(
   {
