@@ -1,229 +1,167 @@
-import {
-  Button,
-  ChatInput,
-  SelectMenu,
-  SelectMenuType,
-} from '@akki256/discord-interaction';
-import {
-  ActionRow,
-  ActionRowBuilder,
-  ApplicationCommandOptionType,
-  AttachmentBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  Colors,
-  ComponentType,
-  EmbedBuilder,
-  MessageActionRowComponent,
-  PermissionFlagsBits,
-  resolveColor,
-  StringSelectMenuBuilder,
-} from 'discord.js';
-import { createHiveCard, games, timeframe } from '../../module/canvas/hive';
+import { Button, ChatInput, SelectMenu, SelectMenuType } from '@akki256/discord-interaction';
+import { ActionRow, ActionRowBuilder, ApplicationCommandOptionType, AttachmentBuilder, ButtonBuilder, ButtonStyle, Colors, ComponentType, EmbedBuilder, MessageActionRowComponent, PermissionFlagsBits, resolveColor, StringSelectMenuBuilder } from 'discord.js';
+import { createHiveCard, games, Timeframe } from '../../module/canvas/hive';
 import { Emojis } from '../../module/constant';
 import { Gamertag } from '../../module/validate';
 import MinecraftIDs from '../../schemas/MinecraftIDs';
 import { Hive } from '../../types/responses';
 
 const publicCoolDown = new Set();
-const timeframeName: Record<timeframe, string> = {
-  all: '全ての期間',
-  month: '月間',
+const timeframeName: Record<Timeframe, string> = {
+	all: '全ての期間',
+	month: '月間',
 };
 const hive = new ChatInput(
-  {
-    name: 'hive',
-    description: 'HIVEサーバーでのミニゲームの統計を表示',
-    options: [
-      {
-        name: 'stats',
-        description: 'HIVEサーバーでのミニゲームの統計を表示',
-        options: [
-          {
-            name: 'game',
-            description: 'ゲーム',
-            type: ApplicationCommandOptionType.String,
-            choices: Object.entries(games).map(([value, name]) => ({
-              name,
-              value,
-            })),
-            required: true,
-          },
-          {
-            name: 'timeframe',
-            description: '統計の期間',
-            type: ApplicationCommandOptionType.String,
-            choices: Object.entries(timeframeName).map(([value, name]) => ({
-              name,
-              value,
-            })),
-          },
-          {
-            name: 'gamertag',
-            description: 'ゲーマータグ',
-            maxLength: 18,
-            minLength: 3,
-            type: ApplicationCommandOptionType.String,
-          },
-        ],
-        type: ApplicationCommandOptionType.Subcommand,
-      },
-    ],
-  },
-  { coolTime: 15_000 },
-  async (interaction) => {
-    const subcommand = interaction.options.getSubcommand();
+	{
+		name: 'hive',
+		description: 'HIVEサーバーでのミニゲームの統計を表示',
+		options: [
+			{
+				name: 'stats',
+				description: 'HIVEサーバーでのミニゲームの統計を表示',
+				options: [
+					{
+						name: 'game',
+						description: 'ゲーム',
+						type: ApplicationCommandOptionType.String,
+						choices: Object.entries(games).map(([value, name]) => ({ name, value })),
+						required: true,
+					},
+					{
+						name: 'timeframe',
+						description: '統計の期間',
+						type: ApplicationCommandOptionType.String,
+						choices: Object.entries(timeframeName).map(([value, name]) => ({ name, value })),
+					},
+					{
+						name: 'gamertag',
+						description: 'ゲーマータグ',
+						maxLength: 18,
+						minLength: 3,
+						type: ApplicationCommandOptionType.String,
+					},
+				],
+				type: ApplicationCommandOptionType.Subcommand,
+			},
+		],
+	},
+	{ coolTime: 15_000 },
+	async (interaction) => {
+		const subcommand = interaction.options.getSubcommand();
 
-    if (subcommand === 'stats') {
-      await interaction.deferReply({ ephemeral: true });
-      const gamertag =
-        interaction.options.getString('gamertag') ??
-        (await MinecraftIDs.findOne({ userId: interaction.user.id }))?.be;
+		if (subcommand === 'stats') {
+			await interaction.deferReply({ ephemeral: true });
+			const gamertag = interaction.options.getString('gamertag') ?? (await MinecraftIDs.findOne({ userId: interaction.user.id }))?.be;
 
-      if (!gamertag)
-        return interaction.followUp({
-          content:
-            '`❌` ゲーマータグを入力してください。`/myid`コマンドを使用して入力を省略することも出来ます。',
-          ephemeral: true,
-        });
-      if (!Gamertag.Bedrock.test(gamertag))
-        return interaction.followUp({
-          content: '`❌` 無効なゲーマータグが入力されました。',
-          ephemeral: true,
-        });
+			if (!gamertag)
+				return interaction.followUp({ content: '`❌` ゲーマータグを入力してください。`/myid`コマンドを使用して入力を省略することも出来ます。', ephemeral: true });
+			if (!Gamertag.Bedrock.test(gamertag))
+				return interaction.followUp({ content: '`❌` 無効なゲーマータグが入力されました。', ephemeral: true });
 
-      const game = interaction.options.getString(
-        'game',
-        true,
-      ) as keyof Hive.Games;
-      const frame = (interaction.options.getString('timeframe') ||
-        'all') as timeframe;
+			const game = interaction.options.getString('game', true) as keyof Hive.Games;
+			const frame = (interaction.options.getString('timeframe') || 'all') as Timeframe;
 
-      const buffer = await createHiveCard(game, frame, gamertag).catch(
-        (error) => {
-          interaction.followUp({
-            embeds: [
-              new EmbedBuilder()
-                .setDescription(error.toString())
-                .setColor(Colors.Red),
-            ],
-            components: createComponents(game, frame, gamertag, 'button'),
-          });
-        },
-      );
+			const buffer = await createHiveCard(game, frame, gamertag).catch(error => {
+				interaction.followUp({
+					embeds: [new EmbedBuilder().setDescription(error.toString()).setColor(Colors.Red)],
+					components: createComponents(game, frame, gamertag, 'button'),
+				});
+			});
 
-      if (!buffer) return;
+			if (!buffer) return;
 
-      interaction.followUp({
-        files: [
-          new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.png` }),
-        ],
-        components: createComponents(game, frame, gamertag),
-      });
-    }
-  },
+			interaction.followUp({
+				files: [
+					new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.png` }),
+				],
+				components: createComponents(game, frame, gamertag),
+			});
+		}
+	},
 );
 
 const gameSelect = new SelectMenu(
-  {
-    customId: 'nonick-stats:hive-stats-game',
-    type: SelectMenuType.String,
-  },
-  async (interaction) => {
-    const game = interaction.values[0] as keyof Hive.Games;
-    const frame = getSelectData(
-      interaction.message.components,
-      'nonick-stats:hive-stats-timeframe',
-    )[0] as timeframe;
-    const gamertag = getGamertag(interaction.message.components);
+	{
+		customId: 'nonick-stats:hive-stats-game',
+		type: SelectMenuType.String,
+	},
+	async (interaction) => {
+		const game = interaction.values[0] as keyof Hive.Games;
+		const frame = getSelectData(interaction.message.components, 'nonick-stats:hive-stats-timeframe')[0] as Timeframe;
+		const gamertag = getGamertag(interaction.message.components);
 
-    if (!(gamertag && frame)) return;
+		if (!(gamertag && frame)) return;
 
-    await interaction.update({
-      embeds: [
-        new EmbedBuilder()
-          .setTitle('`📷` 画像を作成中...')
-          .setDescription('更新が完了するまで数秒お待ち下さい。')
-          .setColor(Colors.Green),
-      ],
-      files: [],
-      components: createComponents(game, frame, gamertag, 'all'),
-    });
+		await interaction.update({
+			embeds: [
+				new EmbedBuilder()
+					.setTitle('`📷` 画像を作成中...')
+					.setDescription('更新が完了するまで数秒お待ち下さい。')
+					.setColor(Colors.Green),
+			],
+			files: [],
+			components: createComponents(game, frame, gamertag, 'all'),
+		});
 
-    const buffer = await createHiveCard(game, frame, gamertag).catch(
-      (error) => {
-        interaction.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(error.toString())
-              .setColor(Colors.Red),
-          ],
-          components: createComponents(game, frame, gamertag, 'button'),
-        });
-      },
-    );
+		const buffer = await createHiveCard(game, frame, gamertag).catch(error => {
+			interaction.editReply({
+				embeds: [new EmbedBuilder().setDescription(error.toString()).setColor(Colors.Red)],
+				components: createComponents(game, frame, gamertag, 'button'),
+			});
+		});
 
-    if (!buffer) return;
+		if (!buffer) return;
 
-    interaction.editReply({
-      embeds: [],
-      files: [
-        new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` }),
-      ],
-      components: createComponents(game, frame, gamertag),
-    });
-  },
+		interaction.editReply({
+			embeds: [],
+			files: [
+				new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` }),
+			],
+			components: createComponents(game, frame, gamertag),
+		});
+	},
 );
 
 const timeframeSelect = new SelectMenu(
-  {
-    customId: 'nonick-stats:hive-stats-timeframe',
-    type: SelectMenuType.String,
-  },
-  async (interaction) => {
-    const game = getSelectData(
-      interaction.message.components,
-      'nonick-stats:hive-stats-game',
-    )[0] as keyof Hive.Games;
-    const frame = interaction.values[0] as timeframe;
-    const gamertag = getGamertag(interaction.message.components);
+	{
+		customId: 'nonick-stats:hive-stats-timeframe',
+		type: SelectMenuType.String,
+	},
+	async (interaction) => {
+		const game = getSelectData(interaction.message.components, 'nonick-stats:hive-stats-game')[0] as keyof Hive.Games;
+		const frame = interaction.values[0] as Timeframe;
+		const gamertag = getGamertag(interaction.message.components);
 
-    if (!(gamertag && frame)) return;
+		if (!(gamertag && frame)) return;
 
-    await interaction.update({
-      embeds: [
-        new EmbedBuilder()
-          .setTitle('`📷` 画像を作成中...')
-          .setDescription('更新が完了するまで数秒お待ち下さい。')
-          .setColor(Colors.Green),
-      ],
-      files: [],
-      components: createComponents(game, frame, gamertag, 'all'),
-    });
+		await interaction.update({
+			embeds: [
+				new EmbedBuilder()
+					.setTitle('`📷` 画像を作成中...')
+					.setDescription('更新が完了するまで数秒お待ち下さい。')
+					.setColor(Colors.Green),
+			],
+			files: [],
+			components: createComponents(game, frame, gamertag, 'all'),
+		});
 
-    const buffer = await createHiveCard(game, frame, gamertag).catch(
-      (error) => {
-        interaction.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(error.toString())
-              .setColor(Colors.Red),
-          ],
-          components: createComponents(game, frame, gamertag, 'button'),
-        });
-      },
-    );
+		const buffer = await createHiveCard(game, frame, gamertag).catch(error => {
+			interaction.editReply({
+				embeds: [new EmbedBuilder().setDescription(error.toString()).setColor(Colors.Red)],
+				components: createComponents(game, frame, gamertag, 'button'),
+			});
+		});
 
-    if (!buffer) return;
+		if (!buffer) return;
 
-    interaction.editReply({
-      embeds: [],
-      files: [
-        new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` }),
-      ],
-      components: createComponents(game, frame, gamertag),
-    });
-  },
+		interaction.editReply({
+			embeds: [],
+			files: [
+				new AttachmentBuilder(buffer, { name: `${gamertag}-StatsCard.jpeg` }),
+			],
+			components: createComponents(game, frame, gamertag),
+		});
+	},
 );
 
 const publishButton = new Button(

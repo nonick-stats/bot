@@ -4,38 +4,37 @@ import { canvasHeight, createCard } from '../index';
 import { holder, templates } from './holder';
 
 export const games: Record<keyof Hive.Games, string> = {
-  wars: 'Treasure Wars',
-  dr: 'Death Run',
-  hide: 'Hide And Seek',
-  sg: 'Survival Games',
-  murder: 'Murder Mystery',
-  sky: 'Sky Wars',
-  ctf: 'Capture The Flag',
-  drop: 'Block Drop',
-  ground: 'Ground Wars',
-  build: 'Just Build',
-  party: 'BlockParty',
-  bridge: 'TheBridge (Solo)',
-  grav: 'Gravity',
+	wars: 'Treasure Wars',
+	dr: 'Death Run',
+	hide: 'Hide And Seek',
+	sg: 'Survival Games',
+	murder: 'Murder Mystery',
+	sky: 'Sky Wars',
+	ctf: 'Capture The Flag',
+	drop: 'Block Drop',
+	ground: 'Ground Wars',
+	build: 'Just Build',
+	party: 'BlockParty',
+	bridge: 'TheBridge (Solo)',
+	grav: 'Gravity',
+	bed: 'Bed Wars',
 };
 
-const xpData: Record<
-  keyof Hive.Games,
-  { inc: number; cap: number | null; max: number }
-> = {
-  wars: { inc: 150, cap: 52, max: 100 },
-  dr: { inc: 200, cap: 42, max: 75 },
-  hide: { inc: 100, cap: null, max: 75 },
-  sg: { inc: 150, cap: null, max: 30 },
-  murder: { inc: 100, cap: 82, max: 100 },
-  sky: { inc: 150, cap: 52, max: 75 },
-  ctf: { inc: 150, cap: null, max: 50 },
-  drop: { inc: 150, cap: 22, max: 25 },
-  build: { inc: 100, cap: null, max: 20 },
-  ground: { inc: 150, cap: null, max: 20 },
-  party: { inc: 150, cap: null, max: 25 },
-  bridge: { inc: 300, cap: null, max: 20 },
-  grav: { inc: 150, cap: null, max: 25 },
+const xpData: Record<keyof Hive.Games, { inc: number, cap: number | null, max: number }> = {
+	wars: { inc: 150, cap: 52, max: 100 },
+	dr: { inc: 200, cap: 42, max: 75 },
+	hide: { inc: 100, cap: null, max: 75 },
+	sg: { inc: 150, cap: null, max: 30 },
+	murder: { inc: 100, cap: 82, max: 100 },
+	sky: { inc: 150, cap: 52, max: 75 },
+	ctf: { inc: 150, cap: null, max: 20 },
+	drop: { inc: 150, cap: 22, max: 25 },
+	build: { inc: 100, cap: null, max: 20 },
+	ground: { inc: 150, cap: null, max: 20 },
+	party: { inc: 150, cap: null, max: 25 },
+	bridge: { inc: 300, cap: null, max: 20 },
+	grav: { inc: 150, cap: null, max: 25 },
+	bed: { inc: 150, cap: null, max: 25 },
 };
 
 const endpoints = {
@@ -43,7 +42,7 @@ const endpoints = {
   all: 'https://api.playhive.com/v0/game/all',
 };
 
-export type timeframe = keyof typeof endpoints;
+export type Timeframe = keyof typeof endpoints;
 
 export async function createHiveCard<T extends keyof Hive.Games>(
   game: T,

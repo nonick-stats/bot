@@ -105,6 +105,13 @@ export namespace Hive {
     maps_completed_without_dying: number;
   }
 
+  interface BedWars extends BaseStats {
+    final_kills: number;
+    kills: number;
+    beds_destroyed: number;
+    deaths: number;
+  }
+
   export interface Games {
     wars: TreasureWars;
     dr: DeathRun;
@@ -119,19 +126,22 @@ export namespace Hive {
     party: BlockParty;
     bridge: TheBridge;
     grav: Gravity;
+    bed: BedWars;
   }
 
-  export interface AllGameStats
-    extends TreasureWars,
-      DeathRun,
-      HideAndSeek,
-      SurvivalGames,
-      MurderMystery,
-      SkyWars,
-      CaptureTheFlag,
-      BlockDrop,
-      GroundWars,
-      JustBuild,
-      BlockParty,
-      TheBridge {}
+  export interface AllGameStats extends
+    TreasureWars,
+    DeathRun,
+    HideAndSeek,
+    SurvivalGames,
+    MurderMystery,
+    SkyWars,
+    CaptureTheFlag,
+    BlockDrop,
+    GroundWars,
+    JustBuild,
+    BlockParty,
+    TheBridge,
+    Gravity {
+  }
 }
