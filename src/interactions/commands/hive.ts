@@ -165,88 +165,157 @@ const timeframeSelect = new SelectMenu(
 );
 
 const publishButton = new Button(
-	{ customId: /nonick-stats:public-.*/ },
-	(interaction) => {
-		if (!interaction.inCachedGuild() || !interaction.channel || !interaction.guild.members.me) return;
-		if (publicCoolDown.has(interaction.user.id))
-			return interaction.reply({ content: '`⌛` 現在クールダウン中です。時間を置いて再試行してください', ephemeral: true });
-		if (!interaction.channel?.permissionsFor(interaction.member).has(PermissionFlagsBits.AttachFiles))
-			return interaction.reply({ content: '`❌` あなたはこのチャンネルで画像を送信する権限を持っていません。', ephemeral: true });
+  { customId: /nonick-stats:public-.*/ },
+  (interaction) => {
+    if (
+      !interaction.inCachedGuild() ||
+      !interaction.channel ||
+      !interaction.guild.members.me
+    )
+      return;
+    if (publicCoolDown.has(interaction.user.id))
+      return interaction.reply({
+        content: '`⌛` 現在クールダウン中です。時間を置いて再試行してください',
+        ephemeral: true,
+      });
+    if (
+      !interaction.channel
+        ?.permissionsFor(interaction.member)
+        .has(PermissionFlagsBits.AttachFiles)
+    )
+      return interaction.reply({
+        content:
+          '`❌` あなたはこのチャンネルで画像を送信する権限を持っていません。',
+        ephemeral: true,
+      });
 
-		if (interaction.channel.isThread()) {
-			if (!interaction.channel.sendable)
-				return interaction.reply({ content: '`❌` このスレッドではメッセージを送信できません。', ephemeral: true });
-			if (!interaction.channel.parent?.permissionsFor(interaction.guild.members.me)?.has(PermissionFlagsBits.EmbedLinks | PermissionFlagsBits.SendMessagesInThreads))
-				return interaction.reply({ content: '`❌` BOTの権限不足により、このスレッドで埋め込みを送信できません。' });
-		}
-		else if (!interaction.appPermissions?.has(PermissionFlagsBits.EmbedLinks | PermissionFlagsBits.SendMessages))
-			return interaction.reply({ content: '`❌` BOTの権限不足により、このチャンネルで埋め込みを送信できません。', ephemeral: true });
+    if (interaction.channel.isThread()) {
+      if (!interaction.channel.sendable)
+        return interaction.reply({
+          content: '`❌` このスレッドではメッセージを送信できません。',
+          ephemeral: true,
+        });
+      if (
+        !interaction.channel.parent
+          ?.permissionsFor(interaction.guild.members.me)
+          ?.has(
+            PermissionFlagsBits.EmbedLinks |
+              PermissionFlagsBits.SendMessagesInThreads,
+          )
+      )
+        return interaction.reply({
+          content:
+            '`❌` BOTの権限不足により、このスレッドで埋め込みを送信できません。',
+        });
+    } else if (
+      !interaction.appPermissions?.has(
+        PermissionFlagsBits.EmbedLinks | PermissionFlagsBits.SendMessages,
+      )
+    )
+      return interaction.reply({
+        content:
+          '`❌` BOTの権限不足により、このチャンネルで埋め込みを送信できません。',
+        ephemeral: true,
+      });
 
-		interaction.channel
-			.send({
-				embeds: [
-					new EmbedBuilder()
-						.setColor(resolveColor('#2f3136'))
-						.setImage(interaction.message.attachments.first()?.url || null)
-						.setFooter({ text: `by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL() }),
-				],
-			})
-			.then(() => {
-				interaction.update({
-					embeds: [
-						new EmbedBuilder()
-							.setTitle('`✅` 公開しました')
-							.setColor(Colors.Green),
-					],
-					components: [],
-					files: [],
-				});
-				publicCoolDown.add(interaction.user.id);
-				setTimeout(() => publicCoolDown.delete(interaction.user.id), 30_000);
-			})
-			.catch(() => interaction.reply({ content: '`❌` 画像の送信に失敗しました', ephemeral: true }));
-	},
+    interaction.channel
+      .send({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(resolveColor('#2f3136'))
+            .setImage(interaction.message.attachments.first()?.url || null)
+            .setFooter({
+              text: `by ${interaction.user.tag}`,
+              iconURL: interaction.user.displayAvatarURL(),
+            }),
+        ],
+      })
+      .then(() => {
+        interaction.update({
+          embeds: [
+            new EmbedBuilder()
+              .setTitle('`✅` 公開しました')
+              .setColor(Colors.Green),
+          ],
+          components: [],
+          files: [],
+        });
+        publicCoolDown.add(interaction.user.id);
+        setTimeout(() => publicCoolDown.delete(interaction.user.id), 30_000);
+      })
+      .catch(() =>
+        interaction.reply({
+          content: '`❌` 画像の送信に失敗しました',
+          ephemeral: true,
+        }),
+      );
+  },
 );
 
-function createComponents(game: keyof Hive.Games, timeframe: Timeframe, gamertag: string, disabled?: 'button' | 'all') {
-	return [
-		new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
-			new StringSelectMenuBuilder()
-				.setCustomId('nonick-stats:hive-stats-game')
-				.setOptions(Object.entries(games).map(([value, label]) => ({ label, value, emoji: Emojis.hive[value as keyof Hive.Games], default: value === game })))
-				.setDisabled(disabled === 'all'),
-		),
-		new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
-			new StringSelectMenuBuilder()
-				.setCustomId('nonick-stats:hive-stats-timeframe')
-				.setOptions(Object.entries(timeframeName).map(([value, label]) => ({ label, value, default: value === timeframe })))
-				.setDisabled(disabled === 'all'),
-		),
-		new ActionRowBuilder<ButtonBuilder>().setComponents(
-			new ButtonBuilder()
-				.setCustomId(`nonick-stats:public-${gamertag}`)
-				.setLabel('公開')
-				.setStyle(ButtonStyle.Success)
-				.setEmoji('1073880855644225637')
-				.setDisabled(typeof disabled === 'string'),
-		),
-	];
+function createComponents(
+  game: keyof Hive.Games,
+  timeframe: timeframe,
+  gamertag: string,
+  disabled?: 'button' | 'all',
+) {
+  return [
+    new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
+      new StringSelectMenuBuilder()
+        .setCustomId('nonick-stats:hive-stats-game')
+        .setOptions(
+          Object.entries(games).map(([value, label]) => ({
+            label,
+            value,
+            emoji: Emojis.hive[value as keyof Hive.Games],
+            default: value === game,
+          })),
+        )
+        .setDisabled(disabled === 'all'),
+    ),
+    new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
+      new StringSelectMenuBuilder()
+        .setCustomId('nonick-stats:hive-stats-timeframe')
+        .setOptions(
+          Object.entries(timeframeName).map(([value, label]) => ({
+            label,
+            value,
+            default: value === timeframe,
+          })),
+        )
+        .setDisabled(disabled === 'all'),
+    ),
+    new ActionRowBuilder<ButtonBuilder>().setComponents(
+      new ButtonBuilder()
+        .setCustomId(`nonick-stats:public-${gamertag}`)
+        .setLabel('公開')
+        .setStyle(ButtonStyle.Success)
+        .setEmoji('1073880855644225637')
+        .setDisabled(typeof disabled === 'string'),
+    ),
+  ];
 }
 
 function getGamertag(components: ActionRow<MessageActionRowComponent>[]) {
-	const button = components?.[2].components[0];
-	const gamertag = button.customId?.replace(/^nonick-stats:public-/, '');
-	if (gamertag && Gamertag.Bedrock.test(gamertag)) return gamertag;
-	return null;
+  const button = components?.[2].components[0];
+  const gamertag = button.customId?.replace(/^nonick-stats:public-/, '');
+  if (gamertag && Gamertag.Bedrock.test(gamertag)) return gamertag;
+  return null;
 }
 
-function getSelectData(components: ActionRow<MessageActionRowComponent>[], id: string) {
-	for (const row of components) {
-		const component = row.components.find(c => c.customId === id);
-		if (component?.type !== ComponentType.StringSelect) continue;
-		return component.options.flatMap(option => option.default ? option.value : []);
-	}
-	return [];
+function getSelectData(
+  components: ActionRow<MessageActionRowComponent>[],
+  id: string,
+) {
+  for (const row of components) {
+    const component = row.components.find(
+      (component) => component.customId === id,
+    );
+    if (component?.type !== ComponentType.StringSelect) continue;
+    return component.options.flatMap((option) =>
+      option.default ? option.value : [],
+    );
+  }
+  return [];
 }
 
 module.exports = [hive, gameSelect, timeframeSelect, publishButton];

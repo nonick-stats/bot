@@ -9,17 +9,10 @@ APIを使用して取得した統計データを画像に出力し、コマン�
 ### 対応サーバー
 The HIVE
 
-### config.json (index.jsと同階層に配置)
-```json
-{
-  "clientId": "ClientID",
-  "guildId": "コマンドを登録するサーバーID (nullでグローバルコマンドで登録)",
-
-  "adminGuild": "管理コマンドを登録するサーバーID",
-  "adminUser": ["adminGuild内で管理コマンドを使用できるユーザーのID"],
-
-  "lock": {
-    "hive": false
-  },
-}
+## 環境変数
+```env
+BOT_TOKEN="DiscordBOTのトークン"
+GUILD_ID="コマンドを登録するサーバーのID (省略した際はグローバルコマンドとして登録)"
+MONGODB_URI="mongoDBに接続するためのURI"
+MONGODB_DBNAME="データベース名"
 ```
