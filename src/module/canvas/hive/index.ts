@@ -27,7 +27,7 @@ const xpData: Record<keyof Hive.Games, { inc: number, cap: number | null, max: n
 	sg: { inc: 150, cap: null, max: 30 },
 	murder: { inc: 100, cap: 82, max: 100 },
 	sky: { inc: 150, cap: 52, max: 75 },
-	ctf: { inc: 150, cap: null, max: 20 },
+	ctf: { inc: 150, cap: null, max: 50 },
 	drop: { inc: 150, cap: 22, max: 25 },
 	build: { inc: 100, cap: null, max: 20 },
 	ground: { inc: 150, cap: null, max: 20 },
