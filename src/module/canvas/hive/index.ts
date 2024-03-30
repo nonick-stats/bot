@@ -46,7 +46,7 @@ export type Timeframe = keyof typeof endpoints;
 
 export async function createHiveCard<T extends keyof Hive.Games>(
   game: T,
-  timeframe: timeframe,
+  timeframe: Timeframe,
   gamertag: string,
 ) {
   return await axios

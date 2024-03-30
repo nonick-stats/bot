@@ -254,7 +254,7 @@ const publishButton = new Button(
 
 function createComponents(
   game: keyof Hive.Games,
-  timeframe: timeframe,
+  timeframe: Timeframe,
   gamertag: string,
   disabled?: 'button' | 'all',
 ) {
