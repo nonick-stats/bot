@@ -1,13 +1,13 @@
 import { Button, ChatInput, SelectMenu, SelectMenuType } from '@akki256/discord-interaction';
 import { ActionRow, ActionRowBuilder, ApplicationCommandOptionType, AttachmentBuilder, ButtonBuilder, ButtonStyle, Colors, ComponentType, EmbedBuilder, MessageActionRowComponent, PermissionFlagsBits, resolveColor, StringSelectMenuBuilder } from 'discord.js';
-import { createHiveCard, games, timeframe } from '../../module/canvas/hive';
+import { createHiveCard, games, Timeframe } from '../../module/canvas/hive';
 import { Emojis } from '../../module/constant';
 import { Gamertag } from '../../module/validate';
 import MinecraftIDs from '../../schemas/MinecraftIDs';
 import { Hive } from '../../types/responses';
 
 const publicCoolDown = new Set();
-const timeframeName: Record<timeframe, string> = {
+const timeframeName: Record<Timeframe, string> = {
 	all: '全ての期間',
 	month: '月間',
 };
@@ -59,7 +59,7 @@ const hive = new ChatInput(
 				return interaction.followUp({ content: '`❌` 無効なゲーマータグが入力されました。', ephemeral: true });
 
 			const game = interaction.options.getString('game', true) as keyof Hive.Games;
-			const frame = (interaction.options.getString('timeframe') || 'all') as timeframe;
+			const frame = (interaction.options.getString('timeframe') || 'all') as Timeframe;
 
 			const buffer = await createHiveCard(game, frame, gamertag).catch(error => {
 				interaction.followUp({
@@ -87,7 +87,7 @@ const gameSelect = new SelectMenu(
 	},
 	async (interaction) => {
 		const game = interaction.values[0] as keyof Hive.Games;
-		const frame = getSelectData(interaction.message.components, 'nonick-stats:hive-stats-timeframe')[0] as timeframe;
+		const frame = getSelectData(interaction.message.components, 'nonick-stats:hive-stats-timeframe')[0] as Timeframe;
 		const gamertag = getGamertag(interaction.message.components);
 
 		if (!(gamertag && frame)) return;
@@ -129,7 +129,7 @@ const timeframeSelect = new SelectMenu(
 	},
 	async (interaction) => {
 		const game = getSelectData(interaction.message.components, 'nonick-stats:hive-stats-game')[0] as keyof Hive.Games;
-		const frame = interaction.values[0] as timeframe;
+		const frame = interaction.values[0] as Timeframe;
 		const gamertag = getGamertag(interaction.message.components);
 
 		if (!(gamertag && frame)) return;
@@ -208,7 +208,7 @@ const publishButton = new Button(
 	},
 );
 
-function createComponents(game: keyof Hive.Games, timeframe: timeframe, gamertag: string, disabled?: 'button' | 'all') {
+function createComponents(game: keyof Hive.Games, timeframe: Timeframe, gamertag: string, disabled?: 'button' | 'all') {
 	return [
 		new ActionRowBuilder<StringSelectMenuBuilder>().setComponents(
 			new StringSelectMenuBuilder()
@@ -242,7 +242,7 @@ function getGamertag(components: ActionRow<MessageActionRowComponent>[]) {
 
 function getSelectData(components: ActionRow<MessageActionRowComponent>[], id: string) {
 	for (const row of components) {
-		const component = row.components.find(component => component.customId === id);
+		const component = row.components.find(c => c.customId === id);
 		if (component?.type !== ComponentType.StringSelect) continue;
 		return component.options.flatMap(option => option.default ? option.value : []);
 	}

@@ -3,6 +3,7 @@ import { CardRow } from '../index';
 import { PlaceHolder } from '../../format';
 import { Hive } from '../../../types/responses';
 import { CardTextStyle, Colors } from '../../constant';
+import { per, rate } from '../../util';
 
 export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	build: [
@@ -166,26 +167,35 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 	],
 	murder: [
 		{
-			height: 315,
+			height: 285,
 			fields: [
 				{ title: 'プレイ数', data: '![played]' },
 				{ title: '勝利数', data: '![victories]' },
 				{ title: '勝率', data: '![victoryRate]' },
-				{ title: 'コイン', data: '![coins]', color: Colors.pink },
 			],
 			color: Colors.red,
 			titleOption: { font: CardTextStyle.statsName },
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 		{
-			height: 535,
+			height: 425,
 			fields: [
 				{ title: 'キル数', data: '![murders]' },
 				{ title: 'デス数', data: '![deaths]' },
-				{ title: 'K/D比', data: '![killRate]' },
-				{ title: 'マーダー退治数', data: '![murderer_eliminations]', color: Colors.pink },
+				{ title: 'K/D率', data: '![killRate]' },
 			],
 			color: Colors.yellow,
+			titleOption: { font: CardTextStyle.statsName },
+			dataOption: { font: CardTextStyle.statsValue },
+		},
+		{
+			height: 565,
+			fields: [
+				{ title: 'コイン', data: '![coins]' },
+				{ title: 'マーダー退治数', data: '![murderer_eliminations]' },
+				{ title: 'E/D率', data: '![eliminationRate]' },
+			],
+			color: Colors.pink,
 			titleOption: { font: CardTextStyle.statsName },
 			dataOption: { font: CardTextStyle.statsValue },
 		},
@@ -330,20 +340,55 @@ export const templates: { [K in keyof Hive.Games]: CardRow[] } = {
 				{ title: 'デス数', data: '![deaths]' },
 				{ title: 'ゴール数', data: '![maps_completed]' },
 				{ title: '一発ゴール数', data: '![maps_completed_without_dying]' },
+				{ title: '一発ゴール率', data: '![undyingGoalRate]', color: Colors.pink },
 			],
 			color: Colors.yellow,
 			titleOption: { font: CardTextStyle.statsName },
 			dataOption: { font: CardTextStyle.statsValue },
 		},
 	],
+	bed: [
+		{
+			height: 285,
+			fields: [
+				{ title: 'プレイ数', data: '![played]' },
+				{ title: '勝利数', data: '![victories]' },
+				{ title: '勝率', data: '![victoryRate]' },
+			],
+			color: Colors.red,
+			titleOption: { font: CardTextStyle.statsName },
+			dataOption: { font: CardTextStyle.statsValue },
+		},
+		{
+			height: 425,
+			fields: [
+				{ title: 'キル数', data: '![kills]' },
+				{ title: 'デス数', data: '![deaths]' },
+				{ title: 'K/D率', data: '![killRate]' },
+			],
+			color: Colors.yellow,
+			titleOption: { font: CardTextStyle.statsName },
+			dataOption: { font: CardTextStyle.statsValue },
+		},
+		{
+			height: 565,
+			fields: [
+				{ title: 'ファイナルキル', data: '![final_kills]' },
+				{ title: 'ベッド破壊数', data: '![beds_destroyed]' },
+			],
+			color: Colors.pink,
+			titleOption: { font: CardTextStyle.statsName },
+			dataOption: { font: CardTextStyle.statsValue },
+		},
+	],
 };
 
-const rate = (win?: number, play?: number) => (win || 0) / (play || 1);
-
 export const holder = new PlaceHolder<Hive.AllGameStats>()
-	.register('victoryRate', ({ played, m_solo_played, victories, m_solo_victories }) => `${Math.round(rate(victories || m_solo_victories, played || m_solo_played) * 100)} %`)
-	.register('killRate', ({ deaths, kills, murders }) => rate(kills || murders, deaths).toFixed(2))
-	.register('hitsRate', ({ projectiles_fired, kills }) => `${Math.round(rate(kills, projectiles_fired) * 100)} %`)
+	.register('victoryRate', ({ played, m_solo_played, victories, m_solo_victories }) => per(victories || m_solo_victories, played || m_solo_played, 1))
+	.register('killRate', ({ deaths, kills, murders }) => rate(kills || murders, deaths, 2))
+	.register('eliminationRate', ({ murderer_eliminations, deaths }) => rate(murderer_eliminations, deaths, 2))
+	.register('hitsRate', ({ projectiles_fired, kills }) => per(kills, projectiles_fired, 1))
+	.register('undyingGoalRate', ({ maps_completed, maps_completed_without_dying }) => per(maps_completed_without_dying, maps_completed, 1))
 	.register('bridge_played', ({ m_solo_played, played }) => (m_solo_played || played || '0'))
 	.register('bridge_victories', ({ m_solo_victories, victories }) => (m_solo_victories || victories || '0'))
 	.register('bridge_goals', ({ m_solo_goals, goals }) => (m_solo_goals || goals || '0'))

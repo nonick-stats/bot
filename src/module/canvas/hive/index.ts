@@ -17,6 +17,7 @@ export const games: Record<keyof Hive.Games, string> = {
 	party: 'BlockParty',
 	bridge: 'TheBridge (Solo)',
 	grav: 'Gravity',
+	bed: 'Bed Wars',
 };
 
 const xpData: Record<keyof Hive.Games, { inc: number, cap: number | null, max: number }> = {
@@ -33,6 +34,7 @@ const xpData: Record<keyof Hive.Games, { inc: number, cap: number | null, max: n
 	party: { inc: 150, cap: null, max: 25 },
 	bridge: { inc: 300, cap: null, max: 20 },
 	grav: { inc: 150, cap: null, max: 25 },
+	bed: { inc: 150, cap: null, max: 25 },
 };
 
 const endpoints = {
@@ -40,9 +42,9 @@ const endpoints = {
 	all: 'https://api.playhive.com/v0/game/all',
 };
 
-export type timeframe = keyof typeof endpoints;
+export type Timeframe = keyof typeof endpoints;
 
-export async function createHiveCard<T extends keyof Hive.Games>(game: T, timeframe: timeframe, gamertag: string) {
+export async function createHiveCard<T extends keyof Hive.Games>(game: T, timeframe: Timeframe, gamertag: string) {
 	return await axios.get<Hive.Games[T]>(`${endpoints[timeframe]}/${game}/${gamertag}`, { timeout: 10_000 }).then(async ({ data }) => {
 		if (!data) throw new Error('`❌` 予期しないエラーが発生しました。\n(APIサーバーが落ちている可能性があります)');
 

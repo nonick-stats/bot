@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 import path from 'path';
 dotenv.config();
 
-import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js';
-import { DiscordInteractions, DiscordInteractionsErrorCodes, InteractionsError } from '@akki256/discord-interaction';
-import mongoose, { version } from 'mongoose';
+import { ActivityType, Client, Events, GatewayIntentBits, version } from 'discord.js';
+import { DiscordInteractions, ErrorCodes, InteractionsError } from '@akki256/discord-interaction';
+import mongoose from 'mongoose';
 import { guildId } from '../config.json';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -36,7 +36,7 @@ client.on(Events.InteractionCreate, (interaction): void => {
 
   interactions.run(interaction)
     .catch((err) => {
-      if (err instanceof InteractionsError && err.code === DiscordInteractionsErrorCodes.CommandHasCoolTime) {
+      if (err instanceof InteractionsError && err.code === ErrorCodes.CommandHasCoolTime) {
         interaction.reply({ content: '`⌛` コマンドはクールダウン中です', ephemeral: true });
         return;
       }
@@ -48,5 +48,5 @@ function reloadActivity(): void {
   client.user?.setActivity({ name: `${client.guilds.cache.size}サーバー`, type: ActivityType.Competing });
 }
 
-client.login(process.env.BOT_TOKEN);
-mongoose.connect(process.env.MONGODB_URI, { dbName: process.env.MONGODB_DBNAME });
+client.login();
+mongoose.connect(process.env.DB_URI, { dbName: process.env.DB_NAME });
