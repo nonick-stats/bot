@@ -17,7 +17,7 @@
 		"@akki256/discord-interaction": "^3.1.1",
 		"@biomejs/biome": "^1.5.3",
 		"@napi-rs/canvas": "^0.1.41",
-		"axios": "^1.6.0",
+		"axios": "^1.7.4",
 		"discord.js": "^14.11.0",
 		"dotenv": "^16.2.0",
 		"mongoose": "^7.6.8",
